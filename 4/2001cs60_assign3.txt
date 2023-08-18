@@ -1,0 +1,326 @@
+// CREATTION OF DATABASE
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| cs355_lab2         |
+| information_schema |
+| library_db1        |
+| library_db2        |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+7 rows in set (0.00 sec)
+
+mysql> create database dbms_marks;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| cs355_lab2         |
+| dbms_marks         |
+| information_schema |
+| library_db1        |
+| library_db2        |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+8 rows in set (0.00 sec)
+
+mysql> use dbms_marks;
+Database changed
+
+
+**********************************************
+
+// CREATION OF TABLE
+
+mysql> create table DBMS_MARKS
+    -> (
+    -> roll char(4) not null,
+    -> fname varchar(50) not null,
+    -> marks int check(marks between 0 and 100),
+    -> primary key (roll)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> show tables;
++----------------------+
+| Tables_in_dbms_marks |
++----------------------+
+| DBMS_MARKS           |
++----------------------+
+1 row in set (0.00 sec)
+
+mysql> describe DBMS_MARKS;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| roll  | char(4)     | NO   | PRI | NULL    |       |
+| fname | varchar(50) | NO   |     | NULL    |       |
+| marks | int         | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+
+****************************************
+
+// INSERT ALL VALUES IN THE TABLE
+
+mysql> insert into DBMS_MARKS (roll, fname, marks) values
+    -> ('R001', 'RAM', 95),
+    -> ('R002', 'SAM', 85),
+    -> ('R003', 'RAMBO', 65),
+    -> ('R004', 'RAHIM', 65),
+    -> ('R005', 'CHANDRA', 78),
+    -> ('R006', 'AMAR', 44),
+    -> ('R007', 'AKBAR', 49),
+    -> ('R008', 'ANTONY', 50),
+    -> ('R009', 'MICHAEL', 55),
+    -> ('R010', 'JOHN', 61);
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> select * from DBMS_MARKS;
++------+---------+-------+
+| roll | fname   | marks |
++------+---------+-------+
+| R001 | RAM     |    95 |
+| R002 | SAM     |    85 |
+| R003 | RAMBO   |    65 |
+| R004 | RAHIM   |    65 |
+| R005 | CHANDRA |    78 |
+| R006 | AMAR    |    44 |
+| R007 | AKBAR   |    49 |
+| R008 | ANTONY  |    50 |
+| R009 | MICHAEL |    55 |
+| R010 | JOHN    |    61 |
++------+---------+-------+
+10 rows in set (0.00 sec)
+
+***************************************************
+
+// COUNT THE NUMBER OF RECORDS
+
+mysql> select count(roll) as count
+    -> from DBMS_MARKS;
++-------+
+| count |
++-------+
+|    10 |
++-------+
+1 row in set (0.00 sec)
+
+***************************************************
+
+// COUNT THE NUMBER OF FAILED STUDENTS
+
+mysql> select count(roll) as failed_students
+    -> from DBMS_MARKS
+    -> where marks<50;
++-----------------+
+| failed_students |
++-----------------+
+|               2 |
++-----------------+
+1 row in set (0.00 sec)
+
+******************************************
+
+// NUMBER OF STUDENTS WITH GRADES A, B, C, D, AND E
+
+mysql> select count(roll) as A
+    -> from DBMS_MARKS where marks between 91 and 100;
++---+
+| A |
++---+
+| 1 |
++---+
+1 row in set (0.00 sec)
+
+mysql> select count(roll) as B
+    -> from DBMS_MARKS where marks between 81 and 90;
++---+
+| B |
++---+
+| 1 |
++---+
+1 row in set (0.00 sec)
+
+mysql> select count(roll) as C
+    -> from DBMS_MARKS where marks between 71 and 80;
++---+
+| C |
++---+
+| 1 |
++---+
+1 row in set (0.00 sec)
+
+mysql> select count(roll) as D
+    -> from DBMS_MARKS where marks between 61 and 70;
++---+
+| D |
++---+
+| 3 |
++---+
+1 row in set (0.00 sec)
+
+mysql> select count(roll) as E
+    -> from DBMS_MARKS where marks between 50 and 60;
++---+
+| E |
++---+
+| 2 |
++---+
+1 row in set (0.00 sec)
+
+**********************************************
+
+// GIVING 5 GRACE MARKS TO FAILED STUDENTS
+
+mysql> update DBMS_MARKS
+    -> set marks = marks + 5
+    -> where marks < 50;
+Query OK, 2 rows affected (0.01 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+
+mysql> select * from DBMS_MARKS;
++------+---------+-------+
+| roll | fname   | marks |
++------+---------+-------+
+| R001 | RAM     |    95 |
+| R002 | SAM     |    85 |
+| R003 | RAMBO   |    65 |
+| R004 | RAHIM   |    65 |
+| R005 | CHANDRA |    78 |
+| R006 | AMAR    |    49 | 
+| R007 | AKBAR   |    54 |
+| R008 | ANTONY  |    50 |
+| R009 | MICHAEL |    55 |
+| R010 | JOHN    |    61 |
++------+---------+-------+
+10 rows in set (0.00 sec)
+
+***********************************************
+
+// FAILED STUDENTS AFTER GRACE MARKING
+
+mysql> select * from DBMS_MARKS
+    -> where marks<50;
++------+-------+-------+
+| roll | fname | marks |
++------+-------+-------+
+| R006 | AMAR  |    49 |
++------+-------+-------+
+1 row in set (0.00 sec)
+
+*******************************************
+
+// DELETE FAILED STUDENTS RECORDS
+
+mysql> delete from DBMS_MARKS
+    -> where marks<50;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from DBMS_MARKS;
++------+---------+-------+
+| roll | fname   | marks |
++------+---------+-------+
+| R001 | RAM     |    95 |
+| R002 | SAM     |    85 |
+| R003 | RAMBO   |    65 |
+| R004 | RAHIM   |    65 |
+| R005 | CHANDRA |    78 |
+| R007 | AKBAR   |    54 |
+| R008 | ANTONY  |    54 |
+| R009 | MICHAEL |    55 |
+| R010 | JOHN    |    61 |
++------+---------+-------+
+9 rows in set (0.00 sec)
+
+*****************************************
+
+// COUNT THE UNIQUE MARKS
+
+mysql> select count(distinct(marks))
+    -> as unique_marks from DBMS_MARKS;
++--------------+
+| unique_marks |
++--------------+
+|            7 |
++--------------+
+1 row in set (0.00 sec)
+
+******************************************
+
+// FNAME OF STUDENTS STARTING FROM 'R' OR 'A'
+
+mysql> select * from DBMS_MARKS
+    -> as RandA
+    -> where fname like 'R%'
+    -> or fname like 'A%';
++------+--------+-------+
+| roll | fname  | marks |
++------+--------+-------+
+| R001 | RAM    |    95 |
+| R003 | RAMBO  |    65 |
+| R004 | RAHIM  |    65 |
+| R007 | AKBAR  |    54 |
+| R008 | ANTONY |    54 |
++------+--------+-------+
+5 rows in set (0.00 sec)
+
+***************************************
+
+// FNAME OF STUDENTS WITH 'A' AS THE SECOND CHARACTER
+
+mysql> select * from DBMS_MARKS
+    -> as secondA
+    -> where fname like '_A%';
++------+-------+-------+
+| roll | fname | marks |
++------+-------+-------+
+| R001 | RAM   |    95 |
+| R002 | SAM   |    85 |
+| R003 | RAMBO |    65 |
+| R004 | RAHIM |    65 |
++------+-------+-------+
+4 rows in set (0.00 sec)
+
+***************************************
+
+// CHANGE THE STUDENT'S FNAME WITH ROLL=R005
+
+mysql> update DBMS_MARKS
+    -> set fname = 'CHANDRO'
+    -> where roll = 'R005';
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from DBMS_MARKS;
++------+---------+-------+
+| roll | fname   | marks |
++------+---------+-------+
+| R001 | RAM     |    95 |
+| R002 | SAM     |    85 |
+| R003 | RAMBO   |    65 |
+| R004 | RAHIM   |    65 |
+| R005 | CHANDRO |    78 |
+| R007 | AKBAR   |    54 |
+| R008 | ANTONY  |    54 |
+| R009 | MICHAEL |    55 |
+| R010 | JOHN    |    61 |
++------+---------+-------+
+9 rows in set (0.00 sec)
+
+
+
+
+
+
+
+

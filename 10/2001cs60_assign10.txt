@@ -1,0 +1,294 @@
+// CREATE NEW DATABASE
+
+
+mysql> create database ASSIGN10;
+Query OK, 1 row affected (0.02 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| ASSIGN10           |
+| ASSIGN5            |
+| ASSIGN6            |
+| ASSIGN8            |
+| DOCK               |
+| cs355_lab2         |
+| dbms_marks         |
+| information_schema |
+| library_db1        |
+| library_db2        |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+13 rows in set (0.01 sec)
+
+mysql> use ASSIGN10;
+Database changed
+
+
+---------------------------------------------------------------------------------------------------------------
+
+
+// CREATE A TABLE
+
+
+mysql> create table series
+    -> (
+    ->     Series_reference varchar(50),
+    ->     Period varchar(7),
+    ->     Data_value float,
+    ->     Suppressed varchar(50),
+    ->     STATUS enum('C', 'R', 'F'),
+    ->     UNITS enum('Dollars', 'Number', 'Percent'),
+    ->     Magnitude int,
+    ->     Subject varchar(500),
+    ->     Grp varchar(500),
+    ->     Series_title_1 varchar(200),
+    ->     Series_title_2 varchar(200),
+    ->     Series_title_3 varchar(200),
+    ->     Series_title_4 varchar(200),
+    ->     Series_title_5 varchar(200)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> describe series;
++------------------+------------------------------------+------+-----+---------+-------+
+| Field            | Type                               | Null | Key | Default | Extra |
++------------------+------------------------------------+------+-----+---------+-------+
+| Series_reference | varchar(50)                        | YES  |     | NULL    |       |
+| Period           | varchar(7)                         | YES  |     | NULL    |       |
+| Data_value       | float                              | YES  |     | NULL    |       |
+| Suppressed       | varchar(50)                        | YES  |     | NULL    |       |
+| STATUS           | enum('C','R','F')                  | YES  |     | NULL    |       |
+| UNITS            | enum('Dollars','Number','Percent') | YES  |     | NULL    |       |
+| Magnitude        | int                                | YES  |     | NULL    |       |
+| Subject          | varchar(500)                       | YES  |     | NULL    |       |
+| Grp              | varchar(500)                       | YES  |     | NULL    |       |
+| Series_title_1   | varchar(200)                       | YES  |     | NULL    |       |
+| Series_title_2   | varchar(200)                       | YES  |     | NULL    |       |
+| Series_title_3   | varchar(200)                       | YES  |     | NULL    |       |
+| Series_title_4   | varchar(200)                       | YES  |     | NULL    |       |
+| Series_title_5   | varchar(200)                       | YES  |     | NULL    |       |
++------------------+------------------------------------+------+-----+---------+-------+
+14 rows in set (0.01 sec)
+
+
+---------------------------------------------------------------------------------------------------------------
+
+// SubTask A
+
+
+// IMPORT .csv FILE TO THE TABLE
+
+
+mysql> load data local infile '/home/sanskriti/CS355/10/transactions.csv'
+    -> into table series
+    -> fields terminated by ','
+    -> ignore 1 rows;
+Query OK, 16352 rows affected, 2718 warnings (0.14 sec)
+Records: 16352  Deleted: 0  Skipped: 0  Warnings: 2718
+
+mysql> select * from series limit 10;
++------------------+---------+------------+------------+--------+---------+-----------+-----------------------------------------------+---------------------------------------------------------------+----------------+----------------------+----------------+----------------+----------------+
+| Series_reference | Period  | Data_value | Suppressed | STATUS | UNITS   | Magnitude | Subject                                       | Grp                                                           | Series_title_1 | Series_title_2       | Series_title_3 | Series_title_4 | Series_title_5 |
++------------------+---------+------------+------------+--------+---------+-----------+-----------------------------------------------+---------------------------------------------------------------+----------------+----------------------+----------------+----------------+----------------+
+| ECTA.S19A1       | 2001.03 |          0 |            | C      | Dollars |         6 | Electronic Card Transactions (ANZSIC06) - ECT | Total               |onic card transactions A/S/T by division | Actual         | RTS total industries |                |                | 
+| ECTA.S19A1       | 2002.03 |          0 |            | C      | Dollars |         6 | Electronic Card Transactions (ANZSIC06) - ECT | Total               |onic card transactions A/S/T by division | Actual         | RTS total industries |                |                | 
+| ECTA.S19A1       | 2003.03 |          0 |            | C      | Dollars |         6 | Electronic Card Transactions (ANZSIC06) - ECT | Total               |onic card transactions A/S/T by division | Actual         | RTS total industries |                |                | 
+| ECTA.S19A1       | 2004.03 |    28005.1 |            | F      | Dollars |         6 | Electronic Card Transactions (ANZSIC06) - ECT | Total               |onic card transactions A/S/T by division | Actual         | RTS total industries |                |                | 
+| ECTA.S19A1       | 2005.03 |    30629.6 |            | F      | Dollars |         6 | Electronic Card Transactions (ANZSIC06) - ECT | Total               |onic card transactions A/S/T by division | Actual         | RTS total industries |                |                | 
+| ECTA.S19A1       | 2006.03 |    33317.4 |            | F      | Dollars |         6 | Electronic Card Transactions (ANZSIC06) - ECT | Total               |onic card transactions A/S/T by division | Actual         | RTS total industries |                |                | 
+| ECTA.S19A1       | 2007.03 |      36422 |            | F      | Dollars |         6 | Electronic Card Transactions (ANZSIC06) - ECT | Total               |onic card transactions A/S/T by division | Actual         | RTS total industries |                |                | 
+| ECTA.S19A1       | 2008.03 |      39198 |            | F      | Dollars |         6 | Electronic Card Transactions (ANZSIC06) - ECT | Total               |onic card transactions A/S/T by division | Actual         | RTS total industries |                |                | 
+| ECTA.S19A1       | 2009.03 |    40629.4 |            | F      | Dollars |         6 | Electronic Card Transactions (ANZSIC06) - ECT | Total               |onic card transactions A/S/T by division | Actual         | RTS total industries |                |                | 
+| ECTA.S19A1       | 2010.03 |    41815.4 |            | F      | Dollars |         6 | Electronic Card Transactions (ANZSIC06) - ECT | Total               |onic card transactions A/S/T by division | Actual         | RTS total industries |                |                | 
++------------------+---------+------------+------------+--------+---------+-----------+-----------------------------------------------+---------------------------------------------------------------+----------------+----------------------+----------------+----------------+----------------+
+10 rows in set (0.00 sec)
+
+
+---------------------------------------------------------------------------------------------------------------
+
+
+// SubTask C
+
+
+// COPYING THE TABLE INTO NEW ONE
+
+
+mysql> create table new_series like series;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> insert new_series select * from series;
+Query OK, 16352 rows affected (0.15 sec)
+Records: 16352  Duplicates: 0  Warnings: 0
+
+
+// CREATING THE INDEX ON NEW TABLE
+
+
+mysql> create index idx_ref_per
+    -> on new_series(Series_reference, Period);
+Query OK, 0 rows affected (0.07 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> create index idx_stat
+    -> on new_series(STATUS);
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> create index idx_unit
+    -> on new_series(UNITS);
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> create index idx_stat_unit
+    -> on new_series(STATUS, UNITS);
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> create index idx_dat
+    -> on new_series(Data_value);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+
+---------------------------------------------------------------------------------------------------------------
+
+
+// SubTask B
+
+
+// COMMANDS USED
+
+
+// 1
+mysql> select count(*) from series;
++----------+
+| count(*) |
++----------+
+|    16352 |
++----------+
+1 row in set (0.01 sec)
+
+//2
+mysql> select count(*) from series
+    -> where STATUS='F' and UNITS='Dollars';
++----------+
+| count(*) |
++----------+
+|     4138 |
++----------+
+1 row in set (0.02 sec)
+
+// 3
+mysql> select * from
+    -> series as a
+    -> inner join
+    -> series as b
+    -> on a.Series_reference = b.Series_reference
+    -> and a.Period = b.Period
+    -> and a.STATUS = 'C'
+    -> and b.UNITS = 'Percent';
+* data is too large to show *
+192 rows in set (0.03 sec)
+
+// 4
+mysql> update series 
+    -> set Data_value = null
+    -> where Data_value = 0;
+Query OK, 1160 rows affected (0.04 sec)
+Rows matched: 1160  Changed: 1160  Warnings: 0
+
+// 5
+mysql> update series
+    -> set Data_value = Data_value + 100
+    -> where Series_reference like '%A_';
+Query OK, 5951 rows affected (0.08 sec)
+Rows matched: 6798  Changed: 5951  Warnings: 0
+
+
+---------------------------------------------------------------------------------------------------------------
+
+
+// SubTask D
+
+
+// COMMANDS USED
+
+// 1
+mysql> select count(*) from new_series;
++----------+
+| count(*) |
++----------+
+|    16352 |
++----------+
+1 row in set (0.00 sec)
+
+// 2
+mysql> select count(*) from new_series
+    -> where STATUS='F' and UNITS='Dollars';
++----------+
+| count(*) |
++----------+
+|     4138 |
++----------+
+1 row in set (0.01 sec)
+
+// 3
+mysql> select * from
+    -> new_series as a
+    -> inner join
+    -> new_series as b
+    -> on a.Series_reference = b.Series_reference
+    -> and a.Period = b.Period
+    -> and a.STATUS = 'C'
+    -> and b.UNITS = 'Percent';
+* data is too large to show *
+192 rows in set (0.02 sec)
+
+// 4
+mysql> update new_series 
+    -> set Data_value = null
+    -> where Data_value = 0;
+Query OK, 1160 rows affected (0.04 sec)
+Rows matched: 1160  Changed: 1160  Warnings: 0
+
+// 5
+mysql> update new_series
+    -> set Data_value = Data_value + 100
+    -> where Series_reference like '%A_';
+Query OK, 5951 rows affected (0.05 sec)
+Rows matched: 6798  Changed: 5951  Warnings: 0
+
+
+---------------------------------------------------------------------------------------------------------------
+
+
+// SubTask D
+
+
+// COMPARING THE PERFORMANCES FOR BEFORE IND AFTER INDEXING THE COLUMNS
+
+
+TASK NO   BEFORE    AFTER
+        INDEXING   INDEXING
+        TIME       TIME
+        
+1         0.01        0.00  
+
+2         0.02        0.01
+
+3         0.03        0.02
+
+4         0.04        0.03
+
+5         0.08        0.05
+
+AVERAGE   0.018       0.022
+
+query duration decreased after indexing the table
+hence, the overall performance is increased
+
+

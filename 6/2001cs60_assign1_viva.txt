@@ -1,0 +1,56 @@
+TABLES:
+
+1. COMPANY
+	Name(primary key)
+
+2. TASK
+	Description(primary key)
+
+3. STAFF
+	id(primary key)
+	dob
+	age
+	name
+	Company_name(foreign key references COMPANY(Name))
+	Since
+	Wife_name
+
+4. Phone
+	id(foreign key references STAFF(id))
+	Phone
+	-primary key (id, Phone)
+
+5. Address
+	id(foreign key references STAFF(id))
+	Address
+	-primary key (id, Address)
+
+6. CHILD
+	id(foreign key references STAFF(id))
+	name
+	-primary key (id, name)
+
+8. Perform
+	id(foreign key references STAFF(id))
+	Description(foreign key references TASK(Description))
+	-primary key(id, Description)
+
+
+Here, 8 tables are formed
+but number of tables could be minimized
+for example
+STAFF:
+	id(primary key)
+	dob
+	age
+	mane
+	Wife_name
+	Child_name(multi-valued)
+	Phone(multi-valued)
+	Address(multi-valued)
+	Company_name
+	Since
+	Task_description(multi-valued)
+So, minimum number of tables can be 1
+but it will create problems
+

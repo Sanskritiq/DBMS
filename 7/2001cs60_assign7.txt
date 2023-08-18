@@ -1,0 +1,724 @@
+// CREATE A NEW DATABASE
+
+mysql> create database DOCK;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| ASSIGN5            |
+| ASSIGN6            |
+| DOCK               |
+| cs355_lab2         |
+| dbms_marks         |
+| information_schema |
+| library_db1        |
+| library_db2        |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+11 rows in set (0.00 sec)
+
+mysql> use DOCK;
+Database changed
+
+
+************************************************************************************
+
+
+// CREATE THE TABLES
+
+
+// 'Boats' TABLE
+
+mysql> create table Boats
+    -> (
+    -> bid int unsigned auto_increment not null,
+    -> bname varchar(50) not null,
+    -> color varchar(50) not null,
+    -> primary key (bid)
+    -> )auto_increment = 101;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> describe Boats;
++-------+--------------+------+-----+---------+----------------+
+| Field | Type         | Null | Key | Default | Extra          |
++-------+--------------+------+-----+---------+----------------+
+| bid   | int unsigned | NO   | PRI | NULL    | auto_increment |
+| bname | varchar(50)  | NO   |     | NULL    |                |
+| color | varchar(50)  | NO   |     | NULL    |                |
++-------+--------------+------+-----+---------+----------------+
+3 rows in set (0.00 sec)
+
+
+
+// 'Sailors' TABLE
+
+mysql> create table Sailors
+    -> (
+    -> sid int unsigned not null,
+    -> sname varchar(50) not null,
+    -> rating int unsigned not null check(rating between 0 and 10),
+    -> age float unsigned not null,
+    -> primary key (sid)
+    -> );
+Query OK, 0 rows affected, 1 warning (0.01 sec)
+
+mysql> describe Sailors;
++--------+----------------+------+-----+---------+-------+
+| Field  | Type           | Null | Key | Default | Extra |
++--------+----------------+------+-----+---------+-------+
+| sid    | int unsigned   | NO   | PRI | NULL    |       |
+| sname  | varchar(50)    | NO   |     | NULL    |       |
+| rating | int unsigned   | NO   |     | NULL    |       |
+| age    | float unsigned | NO   |     | NULL    |       |
++--------+----------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+
+
+// 'Reserves' TABLE
+
+mysql> create table Reserves
+    -> (
+    -> sid int unsigned not null,
+    -> bid int unsigned not null,
+    -> day date not null,
+    -> primary key (sid, bid, day)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> describe Reserves;
++-------+--------------+------+-----+---------+-------+
+| Field | Type         | Null | Key | Default | Extra |
++-------+--------------+------+-----+---------+-------+
+| sid   | int unsigned | NO   | PRI | NULL    |       |
+| bid   | int unsigned | NO   | PRI | NULL    |       |
+| day   | date         | NO   | PRI | NULL    |       |
++-------+--------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+
+
+***********************************************************************************
+
+
+// CONNECT THE TABLES USING FOREIGN KEYS
+
+
+mysql> alter table Reserves
+    -> add foreign key (sid) references Sailors(sid),
+    -> add foreign key (bid) references Boats(bid);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> describe Reserves;
++-------+--------------+------+-----+---------+-------+
+| Field | Type         | Null | Key | Default | Extra |
++-------+--------------+------+-----+---------+-------+
+| sid   | int unsigned | NO   | PRI | NULL    |       |
+| bid   | int unsigned | NO   | PRI | NULL    |       |
+| day   | date         | NO   | PRI | NULL    |       |
++-------+--------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+
+
+******************************************************************************
+
+
+// INPUT THE DATA
+
+
+
+// 'Boats' TABLE DATA
+
+mysql> insert into Boats(bname, color) values
+    -> ('Interlak', 'blue'),
+    -> ('Interlak', 'red'),
+    -> ('Clipper', 'green'),
+    -> ('Marine', 'red');
+Query OK, 4 rows affected (0.01 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select * from Boats;
++-----+----------+-------+
+| bid | bname    | color |
++-----+----------+-------+
+| 101 | Interlak | blue  |
+| 102 | Interlak | red   |
+| 103 | Clipper  | green |
+| 104 | Marine   | red   |
++-----+----------+-------+
+4 rows in set (0.00 sec)
+
+
+
+
+// 'Sailors' TABLE DATA
+
+
+mysql> insert into Sailors(sid, sname, rating, age) values
+    -> (22, 'Dustin', 7, 45.0),
+    -> (29, 'Brutus', 1, 33.0),
+    -> (31, 'Lubber', 8, 55.5),
+    -> (32, 'Andy', 8, 25.5),
+    -> (58, 'Rusty', 10, 35.0),
+    -> (64, 'Horatio', 7, 35.0),
+    -> (71, 'Zorba', 10, 16.0),
+    -> (74, 'Horatio', 9, 35.0),
+    -> (85, 'Art', 3, 25.5),
+    -> (95, 'Bob', 3, 63.5);
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> select * from Sailors;
++-----+---------+--------+------+
+| sid | sname   | rating | age  |
++-----+---------+--------+------+
+|  22 | Dustin  |      7 |   45 |
+|  29 | Brutus  |      1 |   33 |
+|  31 | Lubber  |      8 | 55.5 |
+|  32 | Andy    |      8 | 25.5 |
+|  58 | Rusty   |     10 |   35 |
+|  64 | Horatio |      7 |   35 |
+|  71 | Zorba   |     10 |   16 |
+|  74 | Horatio |      9 |   35 |
+|  85 | Art     |      3 | 25.5 |
+|  95 | Bob     |      3 | 63.5 |
++-----+---------+--------+------+
+10 rows in set (0.00 sec)
+
+
+
+
+// 'Reserves' TABLE DATA
+
+
+mysql> insert into Reserves(sid, bid, day) values
+    -> (22, 101, '1998-10-10'),
+    -> (22, 102, '1998-10-10'),
+    -> (22, 103, '1998-10-08'),
+    -> (22, 104, '1998-10-07'),
+    -> (31, 103, '1998-11-06'),
+    -> (31, 104, '1998-11-06'),
+    -> (31, 104, '1998-11-12'),
+    -> (64, 101, '1998-09-05'),
+    -> (64, 102, '1998-09-08'),
+    -> (74, 103, '1998-09-08');
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> select * from Reserves;
++-----+-----+------------+
+| sid | bid | day        |
++-----+-----+------------+
+|  22 | 101 | 1998-10-10 |
+|  64 | 101 | 1998-09-05 |
+|  22 | 102 | 1998-10-10 |
+|  64 | 102 | 1998-09-08 |
+|  22 | 103 | 1998-10-08 |
+|  31 | 103 | 1998-11-06 |
+|  74 | 103 | 1998-09-08 |
+|  22 | 104 | 1998-10-07 |
+|  31 | 104 | 1998-11-06 |
+|  31 | 104 | 1998-11-12 |
++-----+-----+------------+
+10 rows in set (0.00 sec)
+
+
+
+***********************************************************************************************************
+
+
+
+// Q1. Find the age of sailors who have reserved boat 101.
+
+mysql> select distinct(age)
+    -> from Reserves natural join Sailors
+    -> where bid = 101;
++-----+
+| age |
++-----+
+|  45 |
+|  35 |
++-----+
+2 rows in set (0.00 sec)
+
+
+
+************************************************************************************************
+
+
+// Q2. Find the names of sailors who have reserved a green boat.
+
+mysql> select sname
+    -> from Reserves natural join Boats
+    -> natural join Sailors
+    -> where color = 'green';
++---------+
+| sname   |
++---------+
+| Dustin  |
+| Lubber  |
+| Horatio |
++---------+
+3 rows in set (0.01 sec)
+
+
+
+************************************************************************************************
+
+
+// Q3. Find the colors of boats reserved by Brutus.
+
+mysql> select distinct(color)
+    -> from Reserves natural join Boats
+    -> natural join Sailors
+    -> where sname = 'Brutus';
+Empty set (0.00 sec)
+
+
+
+************************************************************************************************
+
+
+// Q4. Find the names of sailors who have reserved at least one boat.
+
+mysql> select sid, sname
+    -> from Reserves natural join Boats
+    -> natural join Sailors
+    -> group by sid
+    -> having count(bid)>=1;
++-----+---------+
+| sid | sname   |
++-----+---------+
+|  22 | Dustin  |
+|  64 | Horatio |
+|  31 | Lubber  |
+|  74 | Horatio |
++-----+---------+
+4 rows in set (0.00 sec)
+
+
+
+************************************************************************************************
+
+
+// Q5. Find the ages of sailors who have reserved a red or a green boat.
+
+mysql> select sid, sname
+    -> from Reserves natural join Boats
+    -> natural join Sailors
+    -> where color = 'green'
+    -> union
+    -> select sid, sname
+    -> from Reserves natural join Boats
+    -> natural join Sailors
+    -> where color = 'red';
++-----+---------+
+| sid | sname   |
++-----+---------+
+|  22 | Dustin  |
+|  31 | Lubber  |
+|  74 | Horatio |
+|  64 | Horatio |
++-----+---------+
+4 rows in set (0.00 sec)
+
+
+
+************************************************************************************************
+
+
+// Q6. Find the names of sailors who have reserved a red and a green boat.
+
+mysql> select sid, sname
+    -> from Reserves natural join Boats
+    -> natural join Sailors
+    -> where color = 'green'
+    -> intersect
+    -> select sid, sname
+    -> from Reserves natural join Boats
+    -> natural join Sailors
+    -> where color = 'red';
++-----+---------+
+| sid | sname   |
++-----+---------+
+|  22 | Dustin  |
+|  31 | Lubber  |
++-----+---------+
+2 rows in set (0.00 sec)
+
+
+************************************************************************************************
+
+
+// Q7. Find the names of sailors who have reserved at least two boats.
+
+mysql> select sid, sname
+    -> from Reserves natural join Boats
+    -> natural join Sailors
+    -> group by sid
+    -> having count(bid)>=2;
++-----+---------+
+| sid | sname   |
++-----+---------+
+|  22 | Dustin  |
+|  64 | Horatio |
+|  31 | Lubber  |
++-----+---------+
+3 rows in set (0.00 sec)
+
+
+************************************************************************************************
+
+
+// Q8. Find the sids of sailors with age over 20 who have not reserved a red boat.
+
+mysql> select sid, sname
+    -> from Reserves natural join Boats
+    -> natural join Sailors
+    -> where age>20 and color!='red';
++-----+---------+
+| sid | sname   |
++-----+---------+
+|  22 | Dustin  |
+|  64 | Horatio |
+|  22 | Dustin  |
+|  31 | Lubber  |
+|  74 | Horatio |
++-----+---------+
+5 rows in set (0.00 sec)
+
+
+
+************************************************************************************************
+
+
+// Q9. Find the names of sailors who have reserved all boats.
+
+mysql> select s.sid, s.sname
+    -> from Sailors s
+    -> where not exists (select b.bid
+    -> from Boats b
+    -> where not exists (select r.bid
+    -> from Reserves r
+    -> where r.bid = b.bid and r.sid = s.sid));
++-----+--------+
+| sid | sname  |
++-----+--------+
+|  22 | Dustin |
++-----+--------+
+1 row in set (0.00 sec)
+
+
+
+************************************************************************************************
+
+
+// Q10. Find the names of sailors who have reserved all boats called Interlake.
+
+mysql> select sid, sname
+    -> from Sailors
+    -> where not exists(
+    -> select * from Boats
+    -> where bname = 'Interlak'
+    -> and not exists(
+    -> select * from Reserves
+    -> where Reserves.sid = Sailors.sid
+    -> and Reserves.bid = Boats.bid));
++-----+---------+
+| sid | sname   |
++-----+---------+
+|  22 | Dustin  |
+|  64 | Horatio |
++-----+---------+
+2 rows in set (0.00 sec)
+
+
+
+************************************************************************************************
+
+
+// Q11. Find the sailor name, boat id, and reservation date for each reservation
+
+mysql> select sname, bid, day
+    -> from Reserves natural join Boats natural join Sailors;
++---------+-----+------------+
+| sname   | bid | day        |
++---------+-----+------------+
+| Dustin  | 101 | 1998-10-10 |
+| Horatio | 101 | 1998-09-05 |
+| Dustin  | 102 | 1998-10-10 |
+| Horatio | 102 | 1998-09-08 |
+| Dustin  | 103 | 1998-10-08 |
+| Lubber  | 103 | 1998-11-06 |
+| Horatio | 103 | 1998-09-08 |
+| Dustin  | 104 | 1998-10-07 |
+| Lubber  | 104 | 1998-11-06 |
+| Lubber  | 104 | 1998-11-12 |
++---------+-----+------------+
+10 rows in set (0.00 sec)
+
+
+
+************************************************************************************************
+
+
+// Q12. Compute increments for the ratings of persons who have sailed two different boats on the same day.
+
+mysql> select rating+1 from Sailors
+    -> where sid in (
+    -> select sid from Reserves
+    -> group by day,
+    -> sid having count(*)=2);
++----------+
+| rating+1 |
++----------+
+|        8 |
+|        9 |
++----------+
+2 rows in set (0.00 sec)
+
+
+
+************************************************************************************************
+
+
+// Q13. Find the color of boats of sailors whose names begin and end with H and have at least three characters.
+
+mysql> select distinct(color)
+    -> from Reserves natural join Boats natural join Sailors
+    -> where sname like 'H_%h';
+Empty set (0.00 sec)
+
+
+
+************************************************************************************************
+
+
+// Q14. Find the ages of all sailors who have reserved red boats but not green boats.
+
+mysql> select sid
+    -> from Reserves natural join Boats natural join Sailors
+    -> where (sid) not in (
+    -> select sid
+    -> from Reserves natural join Boats natural join Sailors
+    -> where color = 'green')
+    -> and color = 'red';
++-----+
+| sid |
++-----+
+|  64 |
++-----+
+1 row in set (0.00 sec)
+
+
+
+************************************************************************************************
+
+
+// Q15. Find all sids of sailors who have a rating of 8 or have reserved boat 101.
+
+mysql> select sid
+    -> from Reserves natural join Boats natural join Sailors
+    -> where rating=8 or bid = 101;
++-----+
+| sid |
++-----+
+|  22 |
+|  64 |
+|  31 |
+|  31 |
+|  31 |
++-----+
+5 rows in set (0.00 sec)
+
+
+
+************************************************************************************************
+
+
+// Q16. Find sailors whose rating is better than some sailor called Horatio.
+
+mysql> select s1.sid, s1.sname
+    -> from Sailors s1, Sailors s2
+    -> where s1.rating > s2.rating
+    -> and s2.sname = 'Horatio';
++-----+---------+
+| sid | sname   |
++-----+---------+
+|  31 | Lubber  |
+|  32 | Andy    |
+|  58 | Rusty   |
+|  58 | Rusty   |
+|  71 | Zorba   |
+|  71 | Zorba   |
+|  74 | Horatio |
++-----+---------+
+7 rows in set (0.00 sec)
+
+
+
+************************************************************************************************
+
+
+// Q17. Find the age of sailor with the lowest rating.
+
+mysql> select age
+    -> from Sailors
+    -> order by rating asc
+    -> limit 1;
++-----+
+| age |
++-----+
+|  33 |
++-----+
+1 row in set (0.00 sec)
+
+
+
+************************************************************************************************
+
+
+// Q18. Find the average age of all sailors whose ratting is greater then 7.
+
+mysql> select rating, avg(age)
+    -> from Sailors
+    -> group by rating
+    -> having rating > 7;
++--------+----------+
+| rating | avg(age) |
++--------+----------+
+|      8 |     40.5 |
+|     10 |     25.5 |
+|      9 |       35 |
++--------+----------+
+3 rows in set (0.00 sec)
+
+
+
+************************************************************************************************
+
+
+// Q19. Find the average age of sailors with a rating of 10.
+
+mysql> select avg(age)
+    -> from Sailors
+    -> where rating = 10;
++----------+
+| avg(age) |
++----------+
+|     25.5 |
++----------+
+1 row in set (0.00 sec)
+
+
+
+************************************************************************************************
+
+
+// Q20. Find the names of sailors who are older than the oldest sailor with a rating of 10.
+
+mysql> select s.sname
+    -> from Sailors s
+    -> where s.age > (select max(s2.age)
+    -> from Sailors s2
+    -> where s2.rating=10);
++--------+
+| sname  |
++--------+
+| Dustin |
+| Lubber |
+| Bob    |
++--------+
+3 rows in set (0.00 sec)
+
+
+
+************************************************************************************************
+
+
+// Q21. Find the age of the youngest sailor for each rating level.
+
+mysql> select rating, min(age)
+    -> from Sailors
+    -> group by rating;
++--------+----------+
+| rating | min(age) |
++--------+----------+
+|      7 |       35 |
+|      1 |       33 |
+|      8 |     25.5 |
+|     10 |       16 |
+|      9 |       35 |
+|      3 |     25.5 |
++--------+----------+
+6 rows in set (0.00 sec)
+
+
+
+************************************************************************************************
+
+
+// Q22. Find the age of the youngest sailor who is eligible to vote (i.e., is at least 18 years old) for each rating level with at least two such sailors.
+
+mysql> select rating, min(age)
+    -> from Sailors 
+    -> where age>18
+    -> group by rating
+    -> having count(*)>1;
++--------+----------+
+| rating | min(age) |
++--------+----------+
+|      7 |       35 |
+|      8 |     25.5 |
+|      3 |     25.5 |
++--------+----------+
+3 rows in set (0.00 sec)
+
+
+
+************************************************************************************************
+
+
+// Q23. For each blue boat, find the number of reservations for this boat.
+
+mysql> select bid, count(*) as scount
+    -> from Reserves natural join Boats natural join Sailors 
+    -> where color = 'red'
+    -> group by bid;
++-----+--------+
+| bid | scount |
++-----+--------+
+| 102 |      2 |
+| 104 |      3 |
++-----+--------+
+2 rows in set (0.00 sec)
+
+
+
+************************************************************************************************
+
+
+// Q24. Find those ratings for which the average age of sailors is the minimum over all ratings.
+
+mysql> select s.rating
+    -> from Sailors s
+    -> group by s.rating
+    -> having avg(s.age) <= all (
+    -> select avg(s2.age)
+    -> from Sailors s2
+    -> group by s2.rating);
++--------+
+| rating |
++--------+
+|     10 |
++--------+
+1 row in set (0.00 sec)
+
+
+

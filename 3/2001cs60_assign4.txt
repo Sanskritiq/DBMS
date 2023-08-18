@@ -1,0 +1,340 @@
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| cs355_lab2         |
+| information_schema |
+| library_db1        |
+| library_db2        |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+7 rows in set (0.00 sec)
+
+mysql> create database EMP;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| EMP                |
+| cs355_lab2         |
+| information_schema |
+| library_db1        |
+| library_db2        |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+8 rows in set (0.00 sec)
+
+mysql> use EMP;
+Database changed
+mysql> create table EMPLOYEES
+    -> (
+    -> E_ID int not null check(E_ID between 200 and 300),
+    -> Name varchar(50) not null,
+    -> Salary int not null
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> show tables;
++---------------+
+| Tables_in_EMP |
++---------------+
+| EMPLOYEES     |
++---------------+
+1 row in set (0.01 sec)
+
+mysql> describe EMPLOYEES;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| E_ID   | int         | NO   |     | NULL    |       |
+| Name   | varchar(50) | NO   |     | NULL    |       |
+| Salary | int         | NO   |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> insert into EMPLOYEES (E_ID, Name, Salary) values
+    -> (200, 'Esha', 44000),
+    -> (201, 'Hiten', 45000),
+    -> (202, 'Rita', 67000),
+    -> (202, 'Rita', 67000),
+    -> (203, 'Varsha', 34000),
+    -> (204, 'Rahul', 75000),
+    -> (204, 'Rahul', 75000),
+    -> (205, 'Varun', 65000),
+    -> (206, 'Meeta', 55000);
+Query OK, 9 rows affected (0.01 sec)
+Records: 9  Duplicates: 0  Warnings: 0
+
+mysql> select * from EMPLOYEES;
++------+--------+--------+
+| E_ID | Name   | Salary |
++------+--------+--------+
+|  200 | Esha   |  44000 |
+|  201 | Hiten  |  45000 |
+|  202 | Rita   |  67000 |
+|  202 | Rita   |  67000 |
+|  203 | Varsha |  34000 |
+|  204 | Rahul  |  75000 |
+|  204 | Rahul  |  75000 |
+|  205 | Varun  |  65000 |
+|  206 | Meeta  |  55000 |
++------+--------+--------+
+9 rows in set (0.00 sec)
+
+mysql> select distinct(E_ID), Name, Salary
+    -> from EMPLOYEES;
++------+--------+--------+
+| E_ID | Name   | Salary |
++------+--------+--------+
+|  200 | Esha   |  44000 |
+|  201 | Hiten  |  45000 |
+|  202 | Rita   |  67000 |
+|  203 | Varsha |  34000 |
+|  204 | Rahul  |  75000 |
+|  205 | Varun  |  65000 |
+|  206 | Meeta  |  55000 |
++------+--------+--------+
+7 rows in set (0.01 sec)
+
+**********************************
+insert into EMPLOYEES (E_ID, Name, Salary) values
+(200, 'Esha', 44000),
+(201, 'Hiten', 45000),
+(202, 'Rita', 67000),
+(202, 'Rita', 67000),
+(203, 'Varsha', 34000),
+(204, 'Rahul', 75000),
+(204, 'Rahul', 75000),
+(205, 'Varun', 65000),
+(206, 'Meeta', 55000);
+*********************************
+
+mysql> create table copy_of_EMPLOYEES select distinct(E_ID), name, salary from EMPLOYEES;
+Query OK, 7 rows affected (0.01 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> show tables;
++-------------------+
+| Tables_in_EMP     |
++-------------------+
+| EMPLOYEES         |
+| copy_of_EMPLOYEES |
++-------------------+
+2 rows in set (0.01 sec)
+
+mysql> select * from copy_of_EMPLOYEES;
++------+--------+--------+
+| E_ID | name   | salary |
++------+--------+--------+
+|  200 | Esha   |  44000 |
+|  201 | Hiten  |  45000 |
+|  202 | Rita   |  67000 |
+|  203 | Varsha |  34000 |
+|  204 | Rahul  |  75000 |
+|  205 | Varun  |  65000 |
+|  206 | Meeta  |  55000 |
++------+--------+--------+
+7 rows in set (0.00 sec)
+
+mysql> drop table EMPLOYEES;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> alter table copy_of_EMPLOYEES rename to EMPLOYEES;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> show tables;
++---------------+
+| Tables_in_EMP |
++---------------+
+| EMPLOYEES     |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> select * from EMPLOYEES;
++------+--------+--------+
+| E_ID | name   | salary |
++------+--------+--------+
+|  200 | Esha   |  44000 |
+|  201 | Hiten  |  45000 |
+|  202 | Rita   |  67000 |
+|  203 | Varsha |  34000 |
+|  204 | Rahul  |  75000 |
+|  205 | Varun  |  65000 |
+|  206 | Meeta  |  55000 |
++------+--------+--------+
+7 rows in set (0.00 sec)
+
+mysql> select * from EMPLOYEES order by E_ID desc limit 5;
++------+--------+--------+
+| E_ID | name   | salary |
++------+--------+--------+
+|  206 | Meeta  |  55000 |
+|  205 | Varun  |  65000 |
+|  204 | Rahul  |  75000 |
+|  203 | Varsha |  34000 |
+|  202 | Rita   |  67000 |
++------+--------+--------+
+5 rows in set (0.00 sec)
+
+mysql> select max(Salary) as Salary 
+    -> from EMPLOYEES
+    -> where Salary not in 
+    -> (
+    -> select max(Salary) as Salary
+    -> from EMPLOYEES
+    -> );
++--------+
+| Salary |
++--------+
+|  67000 |
++--------+
+1 row in set (0.01 sec)
+
+mysql> show tables;
++---------------+
+| Tables_in_EMP |
++---------------+
+| EMPLOYEES     |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> create table Table_X
+    -> (X_COL int check(X_COL between 0 and 1));
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> create table Table_Y
+    -> (Y_COL int check(Y_COL between 0 and 1));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> show tables;
++---------------+
+| Tables_in_EMP |
++---------------+
+| EMPLOYEES     |
+| Table_X       |
+| Table_Y       |
++---------------+
+3 rows in set (0.01 sec)
+
+mysql> describe Table_X;
++-------+------+------+-----+---------+-------+
+| Field | Type | Null | Key | Default | Extra |
++-------+------+------+-----+---------+-------+
+| X_COL | int  | YES  |     | NULL    |       |
++-------+------+------+-----+---------+-------+
+1 row in set (0.00 sec)
+
+mysql> describe Table_Y;
++-------+------+------+-----+---------+-------+
+| Field | Type | Null | Key | Default | Extra |
++-------+------+------+-----+---------+-------+
+| Y_COL | int  | YES  |     | NULL    |       |
++-------+------+------+-----+---------+-------+
+1 row in set (0.00 sec)
+
+mysql> insert into Table_X (X_COL) values
+    -> (1),
+    -> (0),
+    -> (1),
+    -> (null);
+Query OK, 4 rows affected (0.01 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> insert into Table_Y (Y_COL) values
+    -> (0),
+    -> (null),
+    -> (1),
+    -> (null);
+Query OK, 4 rows affected (0.01 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select * from Table_X;
++-------+
+| X_COL |
++-------+
+|     1 |
+|     0 |
+|     1 |
+|  NULL |
++-------+
+4 rows in set (0.01 sec)
+
+mysql> select * from Table_Y;
++-------+
+| Y_COL |
++-------+
+|     0 |
+|  NULL |
+|     1 |
+|  NULL |
++-------+
+4 rows in set (0.00 sec)
+
+mysql> select
+    -> x.X_COL, y.Y_COL
+    -> from Table_X x join Table_Y y
+    -> on x.X_COL = y.Y_COL;
++-------+-------+
+| X_COL | Y_COL |
++-------+-------+
+|     0 |     0 |
+|     1 |     1 |
+|     1 |     1 |
++-------+-------+
+3 rows in set (0.00 sec)
+
+mysql> select
+    -> x.X_COL, y.Y_COL
+    -> from Table_X x full outer join Table_Y y
+    -> ON x.X_COL = y.Y_COL;
++-------+-------+
+| X_COL | Y_COL |
++-------+-------+
+|     0 |     0 |
+|  NULL |  NULL |
+|     1 |     1 |
+|     1 |     1 |
+|  NULL |  NULL |
+|  NULL |  NULL |
++-------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select
+    -> x.X_COL, y.Y_COL
+    -> from Table_X x right outer join Table_Y y
+    -> ON x.X_COL = y.Y_COL;
++-------+-------+
+| X_COL | Y_COL |
++-------+-------+
+|     0 |     0 |
+|  NULL |  NULL |
+|     1 |     1 |
+|     1 |     1 |
+|  NULL |  NULL |
++-------+-------+
+5 rows in set (0.00 sec)
+
+mysql> with
+    -> TEMP as
+    -> (
+    -> select max(Salary) as Salary from EMPLOYEES 
+    -> where Salary not in
+    -> (select Salary from
+    -> (select Salary from EMPLOYEES order by Salary desc)
+    -> where rownum<2)
+    -> )
+    -> select a.* from EMPLOYEES a join TEMP b 
+    -> on a.Salary = b.Salary;
++------+--------+--------+
+| E_ID | name   | salary |
++------+--------+--------+
+|  202 | Rita   |  67000 |
++------+--------+--------+
+1 rows in set (0.00 sec)
+

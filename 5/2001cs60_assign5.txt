@@ -1,0 +1,552 @@
+// CREATE A DATABASE
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| cs355_lab2         |
+| dbms_marks         |
+| information_schema |
+| library_db1        |
+| library_db2        |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+8 rows in set (0.01 sec)
+
+mysql> create database ASSIGN5;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| ASSIGN5            |
+| cs355_lab2         |
+| dbms_marks         |
+| information_schema |
+| library_db1        |
+| library_db2        |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+9 rows in set (0.00 sec)
+
+use ASSIGN5;
+Database changed
+
+
+******************************************************************
+
+// CREATE TABLES
+
+// 'CUSTOMER' TABLE
+
+mysql> create table CUSTOMER
+    -> (CUST_NO char(5) not null check(CUST_NO like 'C%'),
+    -> NAME varchar(50) not null,
+    -> PHONE_NO decimal(10,0),
+    -> CITY varchar(50) not null,
+    -> primary key (CUST_NO));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> describe CUSTOMER;
++----------+---------------+------+-----+---------+-------+
+| Field    | Type          | Null | Key | Default | Extra |
++----------+---------------+------+-----+---------+-------+
+| CUST_NO  | char(5)       | NO   | PRI | NULL    |       |
+| NAME     | varchar(50)   | NO   |     | NULL    |       |
+| PHONE_NO | decimal(10,0) | YES  |     | NULL    |       |
+| CITY     | varchar(50)   | NO   |     | NULL    |       |
++----------+---------------+------+-----+---------+-------+
+4 rows in set (0.01 sec)
+
+
+
+// 'ACCOUNT' TABLE
+
+mysql> describe ACCOUNT;
++-------------+----------------------+------+-----+---------+-------+
+| Field       | Type                 | Null | Key | Default | Extra |
++-------------+----------------------+------+-----+---------+-------+
+| ACCOUNT_NO  | char(5)              | NO   | PRI | NULL    |       |
+| TYPES       | enum('SB','FD','CA') | NO   |     | NULL    |       |
+| BALANCE     | int                  | NO   |     | NULL    |       |
+| BRANCH_CODE | char(4)              | YES  |     | NULL    |       |
++-------------+----------------------+------+-----+---------+-------+
+4 rows in set (0.01 sec)
+
+
+
+// 'DEPOSITOR' TABLE
+
+mysql> create table DEPOSITOR
+    -> (
+    -> CUST_NO char(5) not null check(CUST_NO like 'C%'),
+    -> ACCOUNT_NO char(5) not null check(ACCOUNT_NO like 'A%'),
+    -> primary key (CUST_NO, ACCOUNT_NO)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> describe DEPOSITOR;
++------------+---------+------+-----+---------+-------+
+| Field      | Type    | Null | Key | Default | Extra |
++------------+---------+------+-----+---------+-------+
+| CUST_NO    | char(5) | NO   | PRI | NULL    |       |
+| ACCOUNT_NO | char(5) | NO   | PRI | NULL    |       |
++------------+---------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+
+
+// 'LOAN' TABLE
+
+mysql> create table LOAN
+    -> (
+    -> LOAN_NO char(5) not null check(LOAN_NO like 'L%'),
+    -> CUST_NO char(5) not null check(CUST_NO like 'C%'),
+    -> AMOUNT int not null check(AMOUNT>1000),
+    -> BRANCH_CODE char(4) check(BRANCH_CODE like 'B%'),
+    -> primary key (LOAN_NO)
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> describe LOAN;
++-------------+---------+------+-----+---------+-------+
+| Field       | Type    | Null | Key | Default | Extra |
++-------------+---------+------+-----+---------+-------+
+| LOAN_NO     | char(5) | NO   | PRI | NULL    |       |
+| CUST_NO     | char(5) | NO   |     | NULL    |       |
+| AMOUNT      | int     | NO   |     | NULL    |       |
+| BRANCH_CODE | char(4) | YES  |     | NULL    |       |
++-------------+---------+------+-----+---------+-------+
+4 rows in set (0.01 sec)
+
+
+
+// 'BRANCH' TABLE
+
+mysql> create table BRANCH
+    -> (
+    -> BRANCH_CODE char(4) check(BRANCH_CODE like 'B%'),
+    -> BRANCH_NAME varchar(50) not null,
+    -> BRANCH_CITY enum('DELHI', 'MUMBAI', 'KOLKATA', 'CHENNAI') not null,
+    -> primary key (BRANCH_CODE)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> describe BRANCH;
++-------------+--------------------------------------------+------+-----+---------+-------+
+| Field       | Type                                       | Null | Key | Default | Extra |
++-------------+--------------------------------------------+------+-----+---------+-------+
+| BRANCH_CODE | char(4)                                    | NO   | PRI | NULL    |       |
+| BRANCH_NAME | varchar(50)                                | NO   |     | NULL    |       |
+| BRANCH_CITY | enum('DELHI','MUMBAI','KOLKATA','CHENNAI') | NO   |     | NULL    |       |
++-------------+--------------------------------------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+
+
+// 'INSTALLMENT' TABLE
+
+mysql> create table INSTALLMENT
+    -> (
+    -> INST_NO int not null check(INST_NO between 1 and 10),
+    -> LOAN_NO char(5) not null check(LOAN_NO like 'L%'),
+    -> INST_AMOUNT int not null check(INST_AMOUNT>=0),
+    -> primary key (INST_NO, LOAN_NO)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> describe INSTALLMENT;
++-------------+---------+------+-----+---------+-------+
+| Field       | Type    | Null | Key | Default | Extra |
++-------------+---------+------+-----+---------+-------+
+| INST_NO     | int     | NO   | PRI | NULL    |       |
+| LOAN_NO     | char(5) | NO   | PRI | NULL    |       |
+| INST_AMOUNT | int     | NO   |     | NULL    |       |
++-------------+---------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+
+
+// LINKING TABLES BY ADDING FOREIGN KEYS
+
+mysql> alter table ACCOUNT
+    -> add foreign key (BRANCH_CODE) references BRANCH(BRANCH_CODE);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table DEPOSITOR
+    -> add foreign key (CUST_NO) references CUSTOMER(CUST_NO);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table DEPOSITOR
+    -> add foreign key (ACCOUNT_NO) references ACCOUNT(ACCOUNT_NO);
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table LOAN
+    -> add foreign key (CUST_NO) references CUSTOMER(CUST_NO);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table LOAN
+    -> add foreign key (BRANCH_CODE) references BRANCH(BRANCH_CODE);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table INSTALLMENT
+    -> add foreign key (LOAN_NO) references LOAN(LOAN_NO);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+************************************************************
+
+// VERIFYING CREATED TABLES
+
+mysql> show tables;
++-------------------+
+| Tables_in_ASSIGN5 |
++-------------------+
+| ACCOUNT           |
+| BRANCH            |
+| CUSTOMER          |
+| DEPOSITOR         |
+| INSTALLMENT       |
+| LOAN              |
++-------------------+
+6 rows in set (0.00 sec)
+
+mysql> describe ACCOUNT;
++-------------+----------------------+------+-----+---------+-------+
+| Field       | Type                 | Null | Key | Default | Extra |
++-------------+----------------------+------+-----+---------+-------+
+| ACCOUNT_NO  | char(5)              | NO   | PRI | NULL    |       |
+| TYPES       | enum('SB','FD','CA') | NO   |     | NULL    |       |
+| BALANCE     | int                  | NO   |     | NULL    |       |
+| BRANCH_CODE | char(4)              | YES  | MUL | NULL    |       |
++-------------+----------------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> describe BRANCH;
++-------------+--------------------------------------------+------+-----+---------+-------+
+| Field       | Type                                       | Null | Key | Default | Extra |
++-------------+--------------------------------------------+------+-----+---------+-------+
+| BRANCH_CODE | char(4)                                    | NO   | PRI | NULL    |       |
+| BRANCH_NAME | varchar(50)                                | NO   |     | NULL    |       |
+| BRANCH_CITY | enum('DELHI','MUMBAI','KOLKATA','CHENNAI') | NO   |     | NULL    |       |
++-------------+--------------------------------------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> describe CUSTOMER;
++----------+---------------+------+-----+---------+-------+
+| Field    | Type          | Null | Key | Default | Extra |
++----------+---------------+------+-----+---------+-------+
+| CUST_NO  | char(5)       | NO   | PRI | NULL    |       |
+| NAME     | varchar(50)   | NO   |     | NULL    |       |
+| PHONE_NO | decimal(10,0) | YES  |     | NULL    |       |
+| CITY     | varchar(50)   | NO   |     | NULL    |       |
++----------+---------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> describe DEPOSITOR;
++------------+---------+------+-----+---------+-------+
+| Field      | Type    | Null | Key | Default | Extra |
++------------+---------+------+-----+---------+-------+
+| CUST_NO    | char(5) | NO   | PRI | NULL    |       |
+| ACCOUNT_NO | char(5) | NO   | PRI | NULL    |       |
++------------+---------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+
+mysql> describe INSTALLMENT;
++-------------+---------+------+-----+---------+-------+
+| Field       | Type    | Null | Key | Default | Extra |
++-------------+---------+------+-----+---------+-------+
+| INST_NO     | int     | NO   | PRI | NULL    |       |
+| LOAN_NO     | char(5) | NO   | PRI | NULL    |       |
+| INST_AMOUNT | int     | NO   |     | NULL    |       |
++-------------+---------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+
+mysql> describe LOAN;
++-------------+---------+------+-----+---------+-------+
+| Field       | Type    | Null | Key | Default | Extra |
++-------------+---------+------+-----+---------+-------+
+| LOAN_NO     | char(5) | NO   | PRI | NULL    |       |
+| CUST_NO     | char(5) | NO   | MUL | NULL    |       |
+| AMOUNT      | int     | NO   |     | NULL    |       |
+| BRANCH_CODE | char(4) | YES  | MUL | NULL    |       |
++-------------+---------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+**************************************************************************
+
+// INSERTING DATAS INTO THE TABLES
+
+mysql> insert into CUSTOMER (CUST_NO, NAME, PHONE_NO, CITY) values
+    -> ('C0001', 'RAJ ANAND SINGH', 9861258466, 'DELHI'),
+    -> ('C0002', 'ANKITA SINGH', 9879958651, 'BANGALORE'),
+    -> ('C0003', 'SOUMYA JHA', 9885623344, 'MUMBAI'),
+    -> ('C0004', 'ABHIJIT MISHRA', 9455845425, 'MUMBAI'),
+    -> ('C0005', 'YASH SARAF', 9665854585, 'KOLKATA'),
+    -> ('C0006', 'SWAROOP RAY', 9437855466, 'CHENNAI'),
+    -> ('C0007', 'SURYA NARAYAN', 9937955212, 'GURGAON'),
+    -> ('C0008', 'PRADHAN PRANAV PRAVEEN', 9336652441, 'PUNE'),
+    -> ('C0009', 'STUTI MISRA', 7870266534, 'DELHI'),
+    -> ('C0010', 'ASLESHA TIWARI', null, 'MUMBAI');
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> select * from CUSTOMER;
++---------+------------------------+------------+-----------+
+| CUST_NO | NAME                   | PHONE_NO   | CITY      |
++---------+------------------------+------------+-----------+
+| C0001   | RAJ ANAND SINGH        | 9861258466 | DELHI     |
+| C0002   | ANKITA SINGH           | 9879958651 | BANGALORE |
+| C0003   | SOUMYA JHA             | 9885623344 | MUMBAI    |
+| C0004   | ABHIJIT MISHRA         | 9455845425 | MUMBAI    |
+| C0005   | YASH SARAF             | 9665854585 | KOLKATA   |
+| C0006   | SWAROOP RAY            | 9437855466 | CHENNAI   |
+| C0007   | SURYA NARAYAN          | 9937955212 | GURGAON   |
+| C0008   | PRADHAN PRANAV PRAVEEN | 9336652441 | PUNE      |
+| C0009   | STUTI MISRA            | 7870266534 | DELHI     |
+| C0010   | ASLESHA TIWARI         |       NULL | MUMBAI    |
++---------+------------------------+------------+-----------+
+10 rows in set (0.00 sec)
+
+mysql> insert into BRANCH
+    -> (BRANCH_CODE, BRANCH_NAME, BRANCH_CITY) values
+    -> ('B001', 'JANAKPURI BRANCH', 'DELHI'),
+    -> ('B002', 'CHANDNICHOWK BRANCH', 'DELHI'),
+    -> ('B003', 'JUHU BRANCH', 'MUMBAI'),
+    -> ('B004', 'ANDHERI BRANCH', 'MUMBAI'),
+    -> ('B005', 'SALTLAKE BRANCH', 'KOLKATA'),
+    -> ('B006', 'SRIRAMPURAM BRANCH', 'CHENNAI');
+Query OK, 6 rows affected (0.01 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql> select * from BRANCH;
++-------------+---------------------+-------------+
+| BRANCH_CODE | BRANCH_NAME         | BRANCH_CITY |
++-------------+---------------------+-------------+
+| B001        | JANAKPURI BRANCH    | DELHI       |
+| B002        | CHANDNICHOWK BRANCH | DELHI       |
+| B003        | JUHU BRANCH         | MUMBAI      |
+| B004        | ANDHERI BRANCH      | MUMBAI      |
+| B005        | SALTLAKE BRANCH     | KOLKATA     |
+| B006        | SRIRAMPURAM BRANCH  | CHENNAI     |
++-------------+---------------------+-------------+
+6 rows in set (0.00 sec)
+
+mysql> insert into ACCOUNT
+    -> (ACCOUNT_NO, TYPES, BALANCE, BRANCH_CODE) values
+    -> ('A0001', 'SB', 200000, 'B003'),
+    -> ('A0002', 'SB', 15000, 'B002'),
+    -> ('A0003', 'CA', 850000, 'B004'),
+    -> ('A0004', 'CA', 35000, 'B004'),
+    -> ('A0005', 'FD', 28500, 'B005'),
+    -> ('A0006', 'FD', 550000, 'B005'),
+    -> ('A0007', 'SB', 48000, 'B001'),
+    -> ('A0008', 'SB', 7200, 'B002'),
+    -> ('A0009', 'SB', 18750, 'B003'),
+    -> ('A0010', 'FD', 99000, 'B004');
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> select * from ACCOUNT;
++------------+-------+---------+-------------+
+| ACCOUNT_NO | TYPES | BALANCE | BRANCH_CODE |
++------------+-------+---------+-------------+
+| A0001      | SB    |  200000 | B003        |
+| A0002      | SB    |   15000 | B002        |
+| A0003      | CA    |  850000 | B004        |
+| A0004      | CA    |   35000 | B004        |
+| A0005      | FD    |   28500 | B005        |
+| A0006      | FD    |  550000 | B005        |
+| A0007      | SB    |   48000 | B001        |
+| A0008      | SB    |    7200 | B002        |
+| A0009      | SB    |   18750 | B003        |
+| A0010      | FD    |   99000 | B004        |
++------------+-------+---------+-------------+
+10 rows in set (0.00 sec)
+
+mysql> insert into DEPOSITOR
+    -> (CUST_NO, ACCOUNT_NO) values
+    -> ('C0003', 'A0001'),
+    -> ('C0004', 'A0001'),
+    -> ('C0004', 'A0002'),
+    -> ('C0006', 'A0003'),
+    -> ('C0006', 'A0004'),
+    -> ('C0001', 'A0005'),
+    -> ('C0002', 'A0005'),
+    -> ('C0010', 'A0006'),
+    -> ('C0009', 'A0007'),
+    -> ('C0008', 'A0008'),
+    -> ('C0007', 'A0009'),
+    -> ('C0006', 'A0010');
+Query OK, 12 rows affected (0.01 sec)
+Records: 12  Duplicates: 0  Warnings: 0
+
+mysql> select * from DEPOSITOR;
++---------+------------+
+| CUST_NO | ACCOUNT_NO |
++---------+------------+
+| C0003   | A0001      |
+| C0004   | A0001      |
+| C0004   | A0002      |
+| C0006   | A0003      |
+| C0006   | A0004      |
+| C0001   | A0005      |
+| C0002   | A0005      |
+| C0010   | A0006      |
+| C0009   | A0007      |
+| C0008   | A0008      |
+| C0007   | A0009      |
+| C0006   | A0010      |
++---------+------------+
+12 rows in set (0.00 sec)
+
+mysql> insert into LOAN
+    -> (LOAN_NO, CUST_NO, AMOUNT, BRANCH_CODE) values
+    -> ('L0001', 'C0005', 3000000, 'B006'),
+    -> ('L0002', 'C0001', 50000, 'B005'),
+    -> ('L0003', 'C0002', 8000000, 'B004'),
+    -> ('L0004', 'C0010', 100000, 'B004'),
+    -> ('L0005', 'C0009', 9500000, 'B005'),
+    -> ('L0006', 'C0008', 25000, 'B006');
+Query OK, 6 rows affected (0.01 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql> select * from LOAN;
++---------+---------+---------+-------------+
+| LOAN_NO | CUST_NO | AMOUNT  | BRANCH_CODE |
++---------+---------+---------+-------------+
+| L0001   | C0005   | 3000000 | B006        |
+| L0002   | C0001   |   50000 | B005        |
+| L0003   | C0002   | 8000000 | B004        |
+| L0004   | C0010   |  100000 | B004        |
+| L0005   | C0009   | 9500000 | B005        |
+| L0006   | C0008   |   25000 | B006        |
++---------+---------+---------+-------------+
+6 rows in set (0.00 sec)
+
+mysql> insert into INSTALLMENT
+    -> (INST_NO, LOAN_NO, INST_AMOUNT) values
+    -> (1, 'L0005', 500000),
+    -> (1, 'L0002', 10000),
+    -> (1, 'L0003', 50000),
+    -> (1, 'L0004', 20000),
+    -> (2, 'L0005', 500000),
+    -> (1, 'L0006', 3000),
+    -> (2, 'L0002', 10000),
+    -> (3, 'L0002', 10000),
+    -> (2, 'L0003', 50000),
+    -> (2, 'L0004', 20000);
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> select * from INSTALLMENT;
++---------+---------+-------------+
+| INST_NO | LOAN_NO | INST_AMOUNT |
++---------+---------+-------------+
+|       1 | L0002   |       10000 |
+|       1 | L0003   |       50000 |
+|       1 | L0004   |       20000 |
+|       1 | L0005   |      500000 |
+|       1 | L0006   |        3000 |
+|       2 | L0002   |       10000 |
+|       2 | L0003   |       50000 |
+|       2 | L0004   |       20000 |
+|       2 | L0005   |      500000 |
+|       3 | L0002   |       10000 |
++---------+---------+-------------+
+10 rows in set (0.00 sec)
+
+***********************************************************************
+
+// 1. Find out the Loan_nos where the loans are taken from any branch with branch_city=MUMBAI.
+
+mysql> select LOAN.LOAN_NO as loan_nos
+    -> from LOAN left join BRANCH
+    -> on LOAN.BRANCH_CODE = BRANCH.BRANCH_CODE
+    -> where BRANCH.BRANCH_CITY = 'MUMBAI';
++----------+
+| loan_nos |
++----------+
+| L0003    |
+| L0004    |
++----------+
+2 rows in set (0.00 sec)
+
+***********************************************************************
+
+// 2. Find the Type of the accounts available in any branch with branch_city = DELHI.
+
+mysql> select distinct(ACCOUNT.TYPES) as type
+    -> from ACCOUNT left join BRANCH
+    -> on ACCOUNT.BRANCH_CODE = BRANCH.BRANCH_CODE
+    -> where BRANCH.BRANCH_CITY = 'DELHI';
++------+
+| type |
++------+
+| SB   |
++------+
+1 rows in set (0.00 sec)
+
+*******************************************************************************
+
+// 3. Find out Installment_no and Installment amount of customer with Name= RAJ ANAND SINGH.
+
+mysql> select INST_NO, INST_AMOUNT
+    -> from CUSTOMER natural join LOAN
+    -> natural join INSTALLMENT
+    -> where NAME = 'RAJ ANAND SINGH';
++---------+-------------+
+| INST_NO | INST_AMOUNT |
++---------+-------------+
+|       1 |       10000 |
+|       2 |       10000 |
+|       3 |       10000 |
++---------+-------------+
+3 rows in set (0.00 sec)
+
+*******************************************************************************
+
+// 4. Find out the Name of the customers who have paid installments of Amount 50000 against his/her loan.
+
+mysql> select NAME
+    -> from CUSTOMER natural join LOAN
+    -> natural join INSTALLMENT
+    -> where INST_AMOUNT = 50000;
++--------------+
+| NAME         |
++--------------+
+| ANKITA SINGH |
++--------------+
+1 rows in set (0.00 sec)
+
+******************************************************
+
+// 5. Find out the Ph_no of customers having an account at the branch with Branch_name equal to SALTLAKE.
+
+
+mysql> select PHONE_NO
+    -> from CUSTOMER natural join DEPOSITOR
+    -> natural join ACCOUNT
+    -> natural join BRANCH
+    -> where BRANCH_NAME = 'SALTLAKE BRANCH';
++------------+
+| PHONE_NO   |
++------------+
+| 9861258466 |
+| 9879958651 |
+|       NULL |
++------------+
+3 rows in set (0.00 sec)
+
+
+

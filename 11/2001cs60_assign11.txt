@@ -1,0 +1,120 @@
+// CREATE DATABASE
+
+
+mysql> create database ASSIGN11_students;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| ASSIGN10           |
+| ASSIGN11_students  |
+| ASSIGN5            |
+| ASSIGN6            |
+| ASSIGN8            |
+| DOCK               |
+| cs355_lab2         |
+| dbms_marks         |
+| information_schema |
+| library_db1        |
+| library_db2        |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+14 rows in set (0.00 sec)
+
+mysql> use ASSIGN11_students;
+Database changed
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+
+// CREATE stD TABLE
+
+
+mysql> create table std
+    -> (
+    ->     stdID varchar(10),
+    ->     passwd varchar(255),
+    ->     stdName varchar(20),
+    ->     DoJ date,
+    ->     Age int,
+    ->     department varchar(20),
+    ->     mobileNo int, 
+    ->     email varchar(30),
+    ->     primary key (stdID)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> describe std;
++------------+--------------+------+-----+---------+-------+
+| Field      | Type         | Null | Key | Default | Extra |
++------------+--------------+------+-----+---------+-------+
+| stdID      | varchar(10)  | NO   | PRI | NULL    |       |
+| passwd     | varchar(255) | YES  |     | NULL    |       |
+| stdName    | varchar(20)  | YES  |     | NULL    |       |
+| DoJ        | date         | YES  |     | NULL    |       |
+| Age        | int          | YES  |     | NULL    |       |
+| department | varchar(20)  | YES  |     | NULL    |       |
+| mobileNo   | int          | YES  |     | NULL    |       |
+| email      | varchar(30)  | YES  |     | NULL    |       |
++------------+--------------+------+-----+---------+-------+
+8 rows in set (0.00 sec)
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+
+// INSERT VALUES IN std TABLE
+
+
+mysql> insert into std (stdID, passwd, stdName, DoJ, Age, department, mobileNo, email) values
+    -> ('stdID1', 'passwd1', 'stdName1', '2001-01-01', 21, 'department1', 111111, 'email1@gmail.com'),
+    -> ('stdID2', 'passwd2', 'stdName2', '2002-02-02', 20, 'department2', 222222, 'email2@gmail.com'),
+    -> ('stdID3', 'passwd3', 'stdName3', '2003-03-03', 19, 'department3', 333333, 'email3@gmail.com'),
+    -> ('stdID4', 'passwd4', 'stdName4', '2001-04-04', 21, 'department4', 444444, 'email4@gmail.com'),
+    -> ('stdID5', 'passwd5', 'stdName5', '2002-05-05', 20, 'department5', 555555, 'email5@gmail.com');
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select * from std;
++--------+---------+----------+------------+------+-------------+----------+------------------+
+| stdID  | passwd  | stdName  | DoJ        | Age  | department  | mobileNo | email            |
++--------+---------+----------+------------+------+-------------+----------+------------------+
+| stdID1 | passwd1 | stdName1 | 2001-01-01 |   21 | department1 |   111111 | email1@gmail.com |
+| stdID2 | passwd2 | stdName2 | 2002-02-02 |   20 | department2 |   222222 | email2@gmail.com |
+| stdID3 | passwd3 | stdName3 | 2003-03-03 |   19 | department3 |   333333 | email3@gmail.com |
+| stdID4 | passwd4 | stdName4 | 2001-04-04 |   21 | department4 |   444444 | email4@gmail.com |
+| stdID5 | passwd5 | stdName5 | 2002-05-05 |   20 | department5 |   555555 | email5@gmail.com |
++--------+---------+----------+------------+------+-------------+----------+------------------+
+5 rows in set (0.00 sec)
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+
+// MAKE LOGIN AND REGISTRATION PAGES
+
+
+// AFTER REGISTRATION DEMO, WE GET
+
+
+mysql> select * from std;
++--------+---------+----------+------------+------+-------------+----------+------------------+
+| stdID  | passwd  | stdName  | DoJ        | Age  | department  | mobileNo | email            |
++--------+---------+----------+------------+------+-------------+----------+------------------+
+| stdID1 | passwd1 | stdName1 | 2001-01-01 |   21 | department1 |   111111 | email1@gmail.com |
+| stdID2 | passwd2 | stdName2 | 2002-02-02 |   20 | department2 |   222222 | email2@gmail.com |
+| stdID3 | passwd3 | stdName3 | 2003-03-03 |   19 | department3 |   333333 | email3@gmail.com |
+| stdID4 | passwd4 | stdName4 | 2001-04-04 |   21 | department4 |   444444 | email4@gmail.com |
+| stdID5 | passwd5 | stdName5 | 2002-05-05 |   20 | department5 |   555555 | email5@gmail.com |
+| stdID6 | passwd6 | stdName6 | 2003-06-06 |    0 | department6 |   666666 | email6@gmail.com |
+| stdID7 | passwd7 | stdName7 | 2001-07-07 |    0 | department7 |   777777 | email7@gmail.com |
++--------+---------+----------+------------+------+-------------+----------+------------------+
+7 rows in set (0.00 sec)
+
+
+

@@ -1,0 +1,311 @@
+// REVISITING ASSIGNMENT 6
+
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| ASSIGN5            |
+| ASSIGN6            |
+| ASSIGN8            |
+| DOCK               |
+| cs355_lab2         |
+| dbms_marks         |
+| information_schema |
+| library_db1        |
+| library_db2        |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+12 rows in set (0.00 sec)
+
+mysql> use ASSIGN6;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables;
++-------------------+
+| Tables_in_ASSIGN6 |
++-------------------+
+| ADDRESS           |
+| COUNTRY           |
+| ORDERS            |
+| PAYMENT           |
+| PRODUCT           |
+| ROLE              |
+| USER              |
++-------------------+
+7 rows in set (0.00 sec)
+
+
+mysql> describe PRODUCT;
++---------------+--------------+------+-----+---------+----------------+
+| Field         | Type         | Null | Key | Default | Extra          |
++---------------+--------------+------+-----+---------+----------------+
+| prod_id       | int          | NO   | PRI | NULL    | auto_increment |
+| prod_name     | varchar(50)  | NO   |     | NULL    |                |
+| prod_count_id | int          | NO   | MUL | NULL    |                |
+| prod_cost     | int unsigned | NO   |     | NULL    |                |
++---------------+--------------+------+-----+---------+----------------+
+4 rows in set (0.01 sec)
+
+mysql> select * from PRODUCT;
++---------+-----------+---------------+-----------+
+| prod_id | prod_name | prod_count_id | prod_cost |
++---------+-----------+---------------+-----------+
+|       1 | product0  |             1 |       100 |
+|       2 | product1  |             1 |       200 |
+|       3 | product2  |             2 |       300 |
+|       4 | product3  |             3 |       400 |
+|       5 | product4  |             3 |       500 |
+|       6 | product5  |             6 |       600 |
+|       7 | product6  |             7 |       700 |
+|       8 | product7  |             9 |       800 |
+|       9 | product8  |             9 |       900 |
+|      10 | product9  |             9 |      1000 |
++---------+-----------+---------------+-----------+
+10 rows in set (0.00 sec)
+
+mysql> describe COUNTRY;
++----------+-------------+------+-----+---------+----------------+
+| Field    | Type        | Null | Key | Default | Extra          |
++----------+-------------+------+-----+---------+----------------+
+| count_id | int         | NO   | PRI | NULL    | auto_increment |
+| country  | varchar(50) | NO   |     | NULL    |                |
+| supplier | varchar(50) | NO   |     | NULL    |                |
++----------+-------------+------+-----+---------+----------------+
+3 rows in set (0.00 sec)
+
+mysql> select * from COUNTRY;
++----------+----------+-----------+
+| count_id | country  | supplier  |
++----------+----------+-----------+
+|        1 | country0 | supplier0 |
+|        2 | country1 | supplier1 |
+|        3 | country2 | supplier2 |
+|        4 | country3 | supplier3 |
+|        5 | country4 | supplier4 |
+|        6 | country5 | supplier5 |
+|        7 | country6 | supplier6 |
+|        8 | country7 | supplier7 |
+|        9 | country8 | supplier8 |
+|       10 | country9 | supplier9 |
++----------+----------+-----------+
+10 rows in set (0.00 sec)
+
+
+--------------------------------------------------------------------------------------------------------------
+
+
+// 1
+
+
+
+mysql> delimiter //
+mysql> create procedure procInsSelUpdDelRead
+    -> (
+    -> in action varchar(10),
+    -> in prod_id int,
+    -> in prod_name varchar(50),
+    -> in prod_count_id int,
+    -> in prod_cost int unsigned
+    -> )
+    -> if @action = 'mySelect' then
+    -> begin
+    ->     select * from PRODUCT;
+    -> end;
+    -> end if;
+    -> if @action = 'myInsert' then
+    -> begin
+    ->     insert into PRODUCT(prod_name, prod_count_id, prod_cost)
+    ->     values(@prod_name, @prod_count_id, @prod_cost);
+    -> end;
+    -> end if;
+    -> if @action = 'myUpdate' then
+    -> begin
+    ->     update PRODUCT
+    ->     set
+    ->         prod_name = @prod_name,
+    ->         prod_count_id = @prod_count_id,
+    ->         prod_cost = @prod_cost
+    ->     where prod_id = @prod_id;
+    -> end;
+    -> end if;
+    -> if @action = 'myDelete' then
+    -> begin
+    ->     delete from PRODUCT
+    ->     where prod_id = @prod_id;
+    -> end;
+    -> end if;
+    -> if @action = 'myRead' then
+    -> begin
+    ->     declare n int default 0;
+    ->     declare i int default 0;
+    ->     select count(*) from PRODUCT into n;
+    ->     set i=0;
+    ->     while i<n do
+    ->     begin
+    ->         select * from
+    ->         (select * from PRODUCT order by prod_id asc) as T
+    ->         where rownum=i+1;
+    ->         set i = i+1;
+    ->     end;
+    ->     end while;
+    -> end;
+    -> end if;//
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter ;
+
+
+--------------------------------------------------------------------------------------------------------------
+
+
+// 2
+
+
+// ADDING category COLUMN
+
+
+mysql> describe PRODUCT;
++---------------+---------------------------+------+-----+---------+----------------+
+| Field         | Type                      | Null | Key | Default | Extra          |
++---------------+---------------------------+------+-----+---------+----------------+
+| prod_id       | int                       | NO   | PRI | NULL    | auto_increment |
+| prod_name     | varchar(50)               | NO   |     | NULL    |                |
+| prod_count_id | int                       | NO   | MUL | NULL    |                |
+| prod_cost     | int unsigned              | NO   |     | NULL    |                |
+| category      | enum('economy','premium') | YES  |     | NULL    |                |
++---------------+---------------------------+------+-----+---------+----------------+
+5 rows in set (0.00 sec)
+
+
+// CREATING procProdCat PROCEDURE
+
+
+mysql> create procedure procProdCat
+    -> (
+    ->     in prod_id int
+    -> )
+    -> begin
+    ->     declare average int default 0;
+    ->     declare cost int default 0;
+    ->     select avg(prod_cost) from PRODUCT into average;
+    ->     select prod_cost from PRODUCT where prod_id = @prod_id into cost;
+    ->     if cost > average 
+    ->         then
+    ->         begin
+    ->             update PRODUCT
+    ->             set category = 'premium'
+    ->             where prod_id = @prod_id;
+    ->         end;
+    ->     else
+    ->         begin
+    ->             update PRODUCT
+    ->             set category = 'economy'
+    ->             where prod_id = @prod_id;
+    ->         end;
+    ->     end if;
+    -> end;//
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter ;
+
+
+--------------------------------------------------------------------------------------------------------------
+
+
+// 3
+
+
+// ADDING gst COLUMN
+
+
+mysql> alter table PRODUCT
+    -> add column gst int;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> describe PRODUCT;
++---------------+---------------------------+------+-----+---------+----------------+
+| Field         | Type                      | Null | Key | Default | Extra          |
++---------------+---------------------------+------+-----+---------+----------------+
+| prod_id       | int                       | NO   | PRI | NULL    | auto_increment |
+| prod_name     | varchar(50)               | NO   |     | NULL    |                |
+| prod_count_id | int                       | NO   | MUL | NULL    |                |
+| prod_cost     | int unsigned              | NO   |     | NULL    |                |
+| category      | enum('economy','premium') | YES  |     | NULL    |                |
+| gst           | int                       | YES  |     | NULL    |                |
++---------------+---------------------------+------+-----+---------+----------------+
+6 rows in set (0.01 sec)
+
+
+// CREATING procProdGst PROCEDURE
+
+
+mysql> delimiter //
+mysql> create procedure procProdGst
+    -> (
+    ->     in prod_id int,
+    ->     in category enum('economy', 'premium')
+    -> )
+    -> begin
+    ->     declare cat enum('economy', 'premium') default null;
+    ->     declare cost int default 0;
+    ->     select prod_cost from PRODUCT where prod_id = @prod_id into cost;
+    ->     if cat = 'economy'
+    ->         then
+    ->         begin
+    ->             update PRODUCT
+    ->             set gst = cost * 0.05
+    ->             where prod_id = @prod_id;
+    ->         end;
+    ->     elseif cat = 'premium'
+    ->         then
+    ->         begin
+    ->             update PRODUCT
+    ->             set gst = cost * 0.21
+    ->             where prod_id = @prod_id;
+    ->         end;
+    ->     end if;
+    -> end;//
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter ;
+
+
+--------------------------------------------------------------------------------------------------------------
+
+
+// 4
+
+
+mysql> delimiter //
+mysql> create function funProdSuppGenString
+    -> (
+    ->     prod_id int,
+    ->     prod_supplier varchar(50)
+    -> )
+    -> returns varchar(12) deterministic
+    -> begin
+    ->     declare first_three varchar(3);
+    ->     declare next_three varchar(3);
+    ->     declare next_next_two varchar(2);
+    ->     declare last_three varchar(3);
+    ->     declare final varchar(11) default null;
+    ->     set @count = (select country from COUNTRY where supplier = @prod_supplier);
+    ->     set @prod_name = (select prod_name from PRODUCT where prod_id = @prod_id);
+    ->     set first_three = convert(@prod_id, char);
+    ->     set first_three = lpad(first_three, 3, '0');
+    ->     set next_three = substring(@prod_supplier, -3, 3);
+    ->     set next_next_two = substring(@count, 1, 2);
+    ->     set last_three = substring(@prod_name, 1, 3);
+    ->     set final = (select concat(first_three, next_three, next_next_two, last_three));
+    ->     return final;
+    -> end;//
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter ;
+

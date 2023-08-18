@@ -1,0 +1,470 @@
+//SANSKRITI SINGH
+//2001CS60
+************************************************************************
+
+mysql> show databases;  // CHECK THE LIST OF DATABASES
++--------------------+  
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+4 rows in set (0.00 sec)
+
+mysql> create database library_db1;  // CREATE NEW DATABASE library_db1
+Query OK, 1 row affected (0.01 sec)
+
+mysql> show databases;            // CHECKING AGAIN FOR NEWLY CREATED DATABASE
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| library_db1        |            // OUR DATABASE IS PRESENT
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+5 rows in set (0.00 sec)
+
+mysql> use library_db1;                  //  OPENING THE DATABASE
+Database changed
+mysql> create table BOOK            //  CREATING 'BOOK' TABLE
+    -> (
+    -> book_id varchar(8) not null,      // ATTRIBUTES AND THEIR DATATYPES
+    -> book_title varchar(50) not null,
+    -> author varchar(50) not null,
+    -> publisher varchar(50) not null,
+    -> publish_year year not null,
+    -> issue_date date not null,
+    -> due_date date not null,
+    -> primary key (book_id)             // 'book_id' IS THE PRIMARY KEY
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> create table STUDENT             //  CREATING 'STUDENT'  TABLE
+    -> (
+    -> std_id varchar(8) not null,        //  ATTRIBUES AND THEIR DATATYPES
+    -> std_name varchar(50) not null,
+    -> primary key (std_id)              // 'std_id' IS THE PRIMARY KEY
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> create table SUPPLIER                 // CREATING 'SUPPLIER' TABLE
+    -> (
+    -> supplier_id varchar(8) not null,    // ATTRIBUTES AND THEIR DATATYPES
+    -> supplier_name varchar(50) not null,
+    -> primary key (supplier_id)              // 'supplier_id' IS THE PRIMARY KEY
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> show tables;            // CHECKING THE FORMATION OF THE TABLE
++-----------------------+
+| Tables_in_library_db1 |
++-----------------------+
+| BOOK                  |
+| STUDENT               |
+| SUPPLIER              |
++-----------------------+
+3 rows in set (0.00 sec)
+
+
+// INSERTING RECORDS IN 'BOOK' TABLE
+
+mysql> insert into BOOK (book_id, book_title, author, publisher, publish_year, issue_date, due_date) values     
+    -> ('bookid01', 'booktitle01', 'author01', 'publisher01', '2011', '2022-01-01', '2022-02-01'),
+    -> ('bookid02', 'booktitle02', 'author02', 'publisher02', '2012', '2022-02-02', '2022-03-02'),
+    -> ('bookid03', 'booktitle03', 'author03', 'publisher03', '2013', '2022-03-03', '2022-04-03'),
+    -> ('bookid04', 'booktitle04', 'author04', 'publisher04', '2014', '2022-04-04', '2022-05-04'),
+    -> ('bookid05', 'booktitle05', 'author05', 'publisher05', '2015', '2022-05-05', '2022-06-05'),
+    -> ('bookid06', 'booktitle06', 'author06', 'publisher06', '2016', '2022-06-06', '2022-07-06'),
+    -> ('bookid07', 'booktitle07', 'author07', 'publisher07', '2017', '2022-07-07', '2022-08-07'),
+    -> ('bookid08', 'booktitle08', 'author08', 'publisher08', '2018', '2022-08-08', '2022-09-08'),
+    -> ('bookid09', 'booktitle09', 'author09', 'publisher09', '2019', '2022-09-09', '2022-10-09'),
+    -> ('bookid10', 'booktitle10', 'author10', 'publisher10', '2020', '2022-10-10', '2022-11-10');
+Query OK, 10 rows affected (0.02 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+
+// INSERTING RECORDS IN 'STUDENT' TABLE
+
+mysql> insert into STUDENT (std_id, std_name) values
+    -> ('studid01', 'studname01'),
+    -> ('studid02', 'studname02'),
+    -> ('studid03', 'studname03'),
+    -> ('studid04', 'studname04'),
+    -> ('studid05', 'studname05'),
+    -> ('studid06', 'studname06'),
+    -> ('studid07', 'studname07'),
+    -> ('studid08', 'studname08'),
+    -> ('studid09', 'studname09'),
+    -> ('studid10', 'studname10');
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+
+// INSERTING RECORDS IN 'SUPPLIER' TABLE
+
+mysql> insert into SUPPLIER (supplier_id, supplier_name) values
+    -> ('suppid01', 'suppname01'),
+    -> ('suppid02', 'suppname02'),
+    -> ('suppid03', 'suppname03'),
+    -> ('suppid04', 'suppname04'),
+    -> ('suppid05', 'suppname05'),
+    -> ('suppid06', 'suppname06'),
+    -> ('suppid07', 'suppname07'),
+    -> ('suppid08', 'suppname08'),
+    -> ('suppid09', 'suppname09'),
+    -> ('suppid10', 'suppname10');
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+
+// CHECKING THE INSERTION OF RECORDS IN ALL THREE TABLES
+
+mysql> select * from BOOK;
++----------+-------------+----------+-------------+--------------+------------+------------+
+| book_id  | book_title  | author   | publisher   | publish_year | issue_date | due_date   |
++----------+-------------+----------+-------------+--------------+------------+------------+
+| bookid01 | booktitle01 | author01 | publisher01 |         2011 | 2022-01-01 | 2022-02-01 |
+| bookid02 | booktitle02 | author02 | publisher02 |         2012 | 2022-02-02 | 2022-03-02 |
+| bookid03 | booktitle03 | author03 | publisher03 |         2013 | 2022-03-03 | 2022-04-03 |
+| bookid04 | booktitle04 | author04 | publisher04 |         2014 | 2022-04-04 | 2022-05-04 |
+| bookid05 | booktitle05 | author05 | publisher05 |         2015 | 2022-05-05 | 2022-06-05 |
+| bookid06 | booktitle06 | author06 | publisher06 |         2016 | 2022-06-06 | 2022-07-06 |
+| bookid07 | booktitle07 | author07 | publisher07 |         2017 | 2022-07-07 | 2022-08-07 |
+| bookid08 | booktitle08 | author08 | publisher08 |         2018 | 2022-08-08 | 2022-09-08 |
+| bookid09 | booktitle09 | author09 | publisher09 |         2019 | 2022-09-09 | 2022-10-09 |
+| bookid10 | booktitle10 | author10 | publisher10 |         2020 | 2022-10-10 | 2022-11-10 |
++----------+-------------+----------+-------------+--------------+------------+------------+
+10 rows in set (0.00 sec)
+
+mysql> select * from STUDENT;
++----------+------------+
+| std_id   | std_name   |
++----------+------------+
+| studid01 | studname01 |
+| studid02 | studname02 |
+| studid03 | studname03 |
+| studid04 | studname04 |
+| studid05 | studname05 |
+| studid06 | studname06 |
+| studid07 | studname07 |
+| studid08 | studname08 |
+| studid09 | studname09 |
+| studid10 | studname10 |
++----------+------------+
+10 rows in set (0.00 sec)
+
+mysql> select * from SUPPLIER;
++-------------+---------------+
+| supplier_id | supplier_name |
++-------------+---------------+
+| suppid01    | suppname01    |
+| suppid02    | suppname02    |
+| suppid03    | suppname03    |
+| suppid04    | suppname04    |
+| suppid05    | suppname05    |
+| suppid06    | suppname06    |
+| suppid07    | suppname07    |
+| suppid08    | suppname08    |
+| suppid09    | suppname09    |
+| suppid10    | suppname10    |
++-------------+---------------+
+10 rows in set (0.00 sec)
+
+
+
+mysql> create table borrows                               // CREATING 'borrow' TABLE
+    -> (
+    -> book_id varchar(8) not null,                      // ATTRIBUTES AND THEIR DATATYPES
+    -> std_id varchar(8) not null,
+    -> foreign key (book_id) references BOOK(book_id),   // USING FOREIGN KEY FOR LINKING 'BOOK' AND 'STUDENT'
+    -> foreign key (std_id) references STUDENT(std_id)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> create table supplies                                      // CREATING 'supplies' TABLE
+    -> (
+    -> book_id varchar(8) not null,                               // ATTRIBUTES AND THEIR DATATYPES
+    -> supplier_id varchar(8) not null,
+    -> foreign key (book_id) references BOOK(book_id),            // USING FOREIGN KEY FOR LINKING 'BOOK' AND 'SUPPLIER'
+    -> foreign key (supplier_id) references SUPPLIER(supplier_id)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+
+mysql> show tables;                         //  CHECKING THE FORMATION OF THE TWO TABLES
++-----------------------+
+| Tables_in_library_db1 |
++-----------------------+
+| BOOK                  |
+| STUDENT               |
+| SUPPLIER              |
+| borrows               |
+| supplies              |
++-----------------------+
+5 rows in set (0.01 sec)
+
+
+// INSERTING RECORDS INTO 'borrows' TABLE
+
+mysql> insert into borrows (book_id, std_id) values
+    -> ('bookid01', 'studid01'),
+    -> ('bookid02', 'studid01'),
+    -> ('bookid03', 'studid02'),
+    -> ('bookid04', 'studid03'),
+    -> ('bookid05', 'studid01'),
+    -> ('bookid06', 'studid03'),
+    -> ('bookid07', 'studid04'),
+    -> ('bookid08', 'studid05'),
+    -> ('bookid09', 'studid02'),
+    -> ('bookid10', 'studid10');
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+
+
+// INSERTING RECORDS INTO 'supplies' TABLE
+
+mysql> insert into supplies (book_id, supplier_id) values
+    -> ('bookid01', 'suppid10'),
+    -> ('bookid02', 'suppid09'),
+    -> ('bookid03', 'suppid07'),
+    -> ('bookid04', 'suppid07'),
+    -> ('bookid05', 'suppid05'),
+    -> ('bookid06', 'suppid05'),
+    -> ('bookid07', 'suppid05'),
+    -> ('bookid08', 'suppid01'),
+    -> ('bookid09', 'suppid01'),
+    -> ('bookid10', 'suppid02');
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> alter table borrows add primary key (book_id);  // 'book_id' IS THE PRIMARY KEY AS
+Query OK, 0 rows affected (0.03 sec)                   // NO TWO STUDENT CAN BORROW THE SAME BOOK
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table supplies add primary key (book_id);  // 'book_id' IS THE PRIMARY KEY AS
+Query OK, 0 rows affected (0.03 sec)                    // NO TWO SUPPLIERS CAN SUPPLY THE SAME BOOK
+Records: 0  Duplicates: 0  Warnings: 0
+
+
+// VERIFYING THE RECORDS OF THE TWO TABLES
+
+mysql> select * from borrows;
++----------+----------+
+| book_id  | std_id   |
++----------+----------+
+| bookid01 | studid01 |
+| bookid02 | studid01 |
+| bookid05 | studid01 |
+| bookid03 | studid02 |
+| bookid09 | studid02 |
+| bookid04 | studid03 |
+| bookid06 | studid03 |
+| bookid07 | studid04 |
+| bookid08 | studid05 |
+| bookid10 | studid10 |
++----------+----------+
+10 rows in set (0.00 sec)
+
+mysql> select * from supplies;
++----------+-------------+
+| book_id  | supplier_id |
++----------+-------------+
+| bookid08 | suppid01    |
+| bookid09 | suppid01    |
+| bookid10 | suppid02    |
+| bookid05 | suppid05    |
+| bookid06 | suppid05    |
+| bookid07 | suppid05    |
+| bookid03 | suppid07    |
+| bookid04 | suppid07    |
+| bookid02 | suppid09    |
+| bookid01 | suppid10    |
++----------+-------------+
+10 rows in set (0.00 sec)
+
+
+
+
+
+
+
+
+
+
+mysql> create database library_db2;  // CREATE A NEW DATABASE 'library_db2'
+Query OK, 1 row affected (0.01 sec)
+
+mysql> show databases;           // VERIFY THE FORMATION OF NEW DATABASE
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| library_db1        |
+| library_db2        |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+6 rows in set (0.00 sec)
+
+
+
+mysql> use library_db2;    // OPENING THE NEWLY CREATED DATABASE
+Database changed
+mysql> create table BOOK              // CREATING THE 'BOOK' TABLE
+    -> (
+    -> book_id varchar(8) not null,
+    -> book_title varchar(50) not null,
+    -> author varchar(50) not null,
+    -> publisher varchar(50) not null,
+    -> publish_year year not null,
+    -> issue_date date not null,
+    -> due_date date not null,
+    -> primary key (book_id)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> create table STUDENT             // CREATING TH 'STUDENT' TABLE
+    -> (
+    -> std_id varchar(8) not null,
+    -> std_name varchar(50) not null,
+    -> primary key (std_id)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> create table SUPPLIER             // CREATING TH 'SUPPLIER' TABLE
+    -> (
+    -> supplier_id varchar(8) not null,
+    -> supplier_name varchar(50) not null,
+    -> primary key (supplier_id)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> show tables;                        // VERIFY THE FORMATION OF NEW TABLES
++-----------------------+
+| Tables_in_library_db2 |
++-----------------------+
+| BOOK                  |
+| STUDENT               |
+| SUPPLIER              |
++-----------------------+
+3 rows in set (0.00 sec)
+
+
+
+// USING THE DATA OF PREVIOUS DATABASE 'library_db1' FO THE THREE TABLES
+
+mysql> insert into BOOK                  
+    -> select * from library_db1.BOOK;
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> insert into STUDENT
+    -> select * from library_db1.STUDENT;
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> insert into SUPPLIER
+    -> select * from library_db1.SUPPLIER;
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+
+
+// VERIFYING THE RECORDS OF THE THREE TABLES 
+
+mysql> select * from BOOK;
++----------+-------------+----------+-------------+--------------+------------+------------+
+| book_id  | book_title  | author   | publisher   | publish_year | issue_date | due_date   |
++----------+-------------+----------+-------------+--------------+------------+------------+
+| bookid01 | booktitle01 | author01 | publisher01 |         2011 | 2022-01-01 | 2022-02-01 |
+| bookid02 | booktitle02 | author02 | publisher02 |         2012 | 2022-02-02 | 2022-03-02 |
+| bookid03 | booktitle03 | author03 | publisher03 |         2013 | 2022-03-03 | 2022-04-03 |
+| bookid04 | booktitle04 | author04 | publisher04 |         2014 | 2022-04-04 | 2022-05-04 |
+| bookid05 | booktitle05 | author05 | publisher05 |         2015 | 2022-05-05 | 2022-06-05 |
+| bookid06 | booktitle06 | author06 | publisher06 |         2016 | 2022-06-06 | 2022-07-06 |
+| bookid07 | booktitle07 | author07 | publisher07 |         2017 | 2022-07-07 | 2022-08-07 |
+| bookid08 | booktitle08 | author08 | publisher08 |         2018 | 2022-08-08 | 2022-09-08 |
+| bookid09 | booktitle09 | author09 | publisher09 |         2019 | 2022-09-09 | 2022-10-09 |
+| bookid10 | booktitle10 | author10 | publisher10 |         2020 | 2022-10-10 | 2022-11-10 |
++----------+-------------+----------+-------------+--------------+------------+------------+
+10 rows in set (0.00 sec)
+
+mysql> select * from STUDENT;
++----------+------------+
+| std_id   | std_name   |
++----------+------------+
+| studid01 | studname01 |
+| studid02 | studname02 |
+| studid03 | studname03 |
+| studid04 | studname04 |
+| studid05 | studname05 |
+| studid06 | studname06 |
+| studid07 | studname07 |
+| studid08 | studname08 |
+| studid09 | studname09 |
+| studid10 | studname10 |
++----------+------------+
+10 rows in set (0.01 sec)
+
+mysql> select * from SUPPLIER;
++-------------+---------------+
+| supplier_id | supplier_name |
++-------------+---------------+
+| suppid01    | suppname01    |
+| suppid02    | suppname02    |
+| suppid03    | suppname03    |
+| suppid04    | suppname04    |
+| suppid05    | suppname05    |
+| suppid06    | suppname06    |
+| suppid07    | suppname07    |
+| suppid08    | suppname08    |
+| suppid09    | suppname09    |
+| suppid10    | suppname10    |
++-------------+---------------+
+10 rows in set (0.01 sec)
+
+
+
+// CREATION OF A NEW TABLE - 'book_records' WHICH HAVE RECORDS OF BORROWERS
+// AND SUPPLIERS OF BOOKS
+
+mysql> create table book_records
+    -> (
+    -> book_id varchar(8) not null,
+    -> std_id varchar(8) not null,
+    -> supplier_id varchar(8) not null,
+    -> primary key (book_id),                                      // 'book_id' IS THE PRIMARY KEY
+    -> foreign key (book_id) references BOOK(book_id),             // LINKING 'BOOK', 'STUDENT' AND 'SUPPLIER' TOGETHER
+    -> foreign key (std_id) references STUDENT(std_id),            // WITH FOREIGN KEYS
+    -> foreign key (supplier_id) references SUPPLIER(supplier_id)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> show tables;           // VERIFYING THE FORMATION OF THE 'book_record' TABLE
++-----------------------+
+| Tables_in_library_db2 |
++-----------------------+
+| BOOK                  |
+| STUDENT               |
+| SUPPLIER              |
+| book_records          |
++-----------------------+
+4 rows in set (0.00 sec)
+
+
+// NOW, WE CAN INSERT THE RECORDS IN ONLY ONE TABLE INSTEAD OF TWO TABLES
+
+
+
+
+
+
+
+
+***************************************************************

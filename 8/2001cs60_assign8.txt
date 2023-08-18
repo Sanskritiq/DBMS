@@ -1,0 +1,161 @@
+// CREATE A NEW DATABASE
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| ASSIGN5            |
+| ASSIGN6            |
+| DOCK               |
+| cs355_lab2         |
+| dbms_marks         |
+| information_schema |
+| library_db1        |
+| library_db2        |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+11 rows in set (0.01 sec)
+
+mysql> create database ASSIGN8;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| ASSIGN5            |
+| ASSIGN6            |
+| ASSIGN8            |
+| DOCK               |
+| cs355_lab2         |
+| dbms_marks         |
+| information_schema |
+| library_db1        |
+| library_db2        |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+12 rows in set (0.00 sec)
+
+mysql> use ASSIGN8;
+Database changed
+
+
+*****************************************************************************************************************************************
+
+
+// CREATE TABELS
+
+
+// stateCases TABLES
+
+
+mysql> create table stateCases
+    -> (
+    -> StateCode char(2) not null,
+    -> EntryDate date not null,
+    -> NumofCases int not null,
+    -> primary key (StateCode, EntryDate)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> describe stateCases;
++------------+---------+------+-----+---------+-------+
+| Field      | Type    | Null | Key | Default | Extra |
++------------+---------+------+-----+---------+-------+
+| StateCode  | char(2) | NO   | PRI | NULL    |       |
+| EntryDate  | date    | NO   | PRI | NULL    |       |
+| NumofCases | int     | NO   |     | NULL    |       |
++------------+---------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+
+// overallCases TABLE
+
+
+mysql> create table overallCases
+    -> (
+    -> StateCode char(2) not null,
+    -> totalCases int not null,
+    -> primary key (StateCode)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> describe overallCases;
++------------+---------+------+-----+---------+-------+
+| Field      | Type    | Null | Key | Default | Extra |
++------------+---------+------+-----+---------+-------+
+| StateCode  | char(2) | NO   | PRI | NULL    |       |
+| totalCases | int     | NO   |     | NULL    |       |
++------------+---------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+
+*****************************************************************************************************************************************
+
+
+// CREATING TRIGGER
+
+
+// FOR INSERTION
+
+
+mysql> delimiter //
+mysql> create trigger inst_case
+    -> after insert on stateCases
+    -> for each row
+    -> begin
+    -> if (select count(*) from overallCases where StateCode = new.StateCode)>0
+    -> then
+    -> update overallCases
+    -> set totalCases = totalCases + new.NumofCases
+    -> where StateCode = new.StateCode;
+    -> else
+    -> insert into overallCases
+    -> values (new.StateCode, new.NumofCases);
+    -> end if;
+    -> end; //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter ;
+
+
+// FOR DELETION
+
+
+mysql> delimiter //
+mysql> create trigger del_case
+    -> after delete on stateCases
+    -> for each row
+    -> begin
+    -> update overallCases 
+    -> set totalCases = totalCases - old.NumofCases
+    -> where StateCode = old.StateCode;
+    -> end; //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter ;
+
+
+// FOR UPDATION
+
+
+mysql> delimiter ;
+mysql> delimiter //
+mysql> create trigger upd_case
+    -> after update on stateCases
+    -> for each row
+    -> begin
+    -> update overallCases
+    -> set totalCases = totalCases + new.NumofCases - old.NumofCases
+    -> where StateCode = new.StateCode;
+    -> end; //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter ;
+
+
+

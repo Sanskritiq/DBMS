@@ -1,0 +1,572 @@
+// CREATE NEW DATABASE
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| ASSIGN5            |
+| cs355_lab2         |
+| dbms_marks         |
+| information_schema |
+| library_db1        |
+| library_db2        |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+9 rows in set (0.01 sec)
+
+mysql> create database ASSIGN6;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| ASSIGN5            |
+| ASSIGN6            |
+| cs355_lab2         |
+| dbms_marks         |
+| information_schema |
+| library_db1        |
+| library_db2        |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+10 rows in set (0.00 sec)
+
+mysql> use ASSIGN6;
+Database changed
+
+****************************************************************************************
+
+// CREATE 'ROLE' TABLE
+
+mysql> create table ROLE
+    -> (
+    -> role_id int not null auto_increment,
+    -> role_name varchar(50) not null,
+    -> primary key (role_id)
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> describe ROLE;
++-----------+-------------+------+-----+---------+----------------+
+| Field     | Type        | Null | Key | Default | Extra          |
++-----------+-------------+------+-----+---------+----------------+
+| role_id   | int         | NO   | PRI | NULL    | auto_increment |
+| role_name | varchar(50) | NO   |     | NULL    |                |
++-----------+-------------+------+-----+---------+----------------+
+2 rows in set (0.01 sec)
+
+
+
+
+// CREATE 'USER' TABLE
+
+mysql> create table USER
+    -> (
+    -> user_id int auto_increment not null,
+    -> email varchar(50) not null,
+    -> first_name varchar(50) not null,
+    -> last_name varchar(50) not null,
+    -> phone_no char(10) not null,
+    -> primary key (user_id)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> describe USER;
++------------+-------------+------+-----+---------+----------------+
+| Field      | Type        | Null | Key | Default | Extra          |
++------------+-------------+------+-----+---------+----------------+
+| user_id    | int         | NO   | PRI | NULL    | auto_increment |
+| email      | varchar(50) | NO   |     | NULL    |                |
+| first_name | varchar(50) | NO   |     | NULL    |                |
+| last_name  | varchar(50) | NO   |     | NULL    |                |
+| phone_no   | char(10)    | NO   |     | NULL    |                |
++------------+-------------+------+-----+---------+----------------+
+5 rows in set (0.00 sec)
+
+
+
+
+// CREATE 'ADDRESS' TABLE
+
+mysql> create table ADDRESS
+    -> (
+    -> add_id int auto_increment not null,
+    -> user_id int not null,
+    -> address varchar(200) not null,
+    -> primary key (add_id)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> describe ADDRESS;
++---------+--------------+------+-----+---------+----------------+
+| Field   | Type         | Null | Key | Default | Extra          |
++---------+--------------+------+-----+---------+----------------+
+| add_id  | int          | NO   | PRI | NULL    | auto_increment |
+| user_id | int          | NO   |     | NULL    |                |
+| address | varchar(200) | NO   |     | NULL    |                |
++---------+--------------+------+-----+---------+----------------+
+3 rows in set (0.00 sec)
+
+
+
+
+// CREATE 'COUNTRY' TABLE
+
+mysql> create table COUNTRY
+    -> (
+    -> count_id int auto_increment not null,
+    -> country varchar(50) not null,
+    -> supplier varchar(50) not null,
+    -> primary key (count_id)
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> describe COUNTRY;
++----------+-------------+------+-----+---------+----------------+
+| Field    | Type        | Null | Key | Default | Extra          |
++----------+-------------+------+-----+---------+----------------+
+| count_id | int         | NO   | PRI | NULL    | auto_increment |
+| country  | varchar(50) | NO   |     | NULL    |                |
+| supplier | varchar(50) | NO   |     | NULL    |                |
++----------+-------------+------+-----+---------+----------------+
+3 rows in set (0.01 sec)
+
+
+
+
+// CREATE 'PRODUCT' TABLE
+
+mysql> create table PRODUCT
+    -> (
+    -> prod_id int auto_increment not null,
+    -> prod_name varchar(50) not null,
+    -> prod_count_id int not null,
+    -> prod_cost int unsigned not null,
+    -> primary key (prod_id)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> describe PRODUCT;
++---------------+--------------+------+-----+---------+----------------+
+| Field         | Type         | Null | Key | Default | Extra          |
++---------------+--------------+------+-----+---------+----------------+
+| prod_id       | int          | NO   | PRI | NULL    | auto_increment |
+| prod_name     | varchar(50)  | NO   |     | NULL    |                |
+| prod_count_id | int          | NO   |     | NULL    |                |
+| prod_cost     | int unsigned | NO   |     | NULL    |                |
++---------------+--------------+------+-----+---------+----------------+
+4 rows in set (0.00 sec)
+
+
+
+
+// CREATE 'ORDERS' TABLE
+
+mysql> create table ORDERS
+    -> (
+    -> order_id int auto_increment not null,
+    -> user_id int not null,
+    -> prod_id int not null,
+    -> primary key (order_id)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> describe ORDERS;
++----------+------+------+-----+---------+----------------+
+| Field    | Type | Null | Key | Default | Extra          |
++----------+------+------+-----+---------+----------------+
+| order_id | int  | NO   | PRI | NULL    | auto_increment |
+| user_id  | int  | NO   |     | NULL    |                |
+| prod_id  | int  | NO   |     | NULL    |                |
++----------+------+------+-----+---------+----------------+
+3 rows in set (0.00 sec)
+
+
+
+
+// CREATE 'PAYMENT' TABLE
+
+mysql> create table PAYMENT
+    -> (
+    -> pay_id int auto_increment not null,
+    -> user_id int not null,
+    -> pay_day date not null,
+    -> pay_mode enum('pre-paid', 'cash-on-delivery') not null,
+    -> primary key (pay_id)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> describe PAYMENT;
++----------+-------------------------------------+------+-----+---------+----------------+
+| Field    | Type                                | Null | Key | Default | Extra          |
++----------+-------------------------------------+------+-----+---------+----------------+
+| pay_id   | int                                 | NO   | PRI | NULL    | auto_increment |
+| user_id  | int                                 | NO   |     | NULL    |                |
+| pay_day  | date                                | NO   |     | NULL    |                |
+| pay_mode | enum('pre-paid','cash-on-delivery') | NO   |     | NULL    |                |
++----------+-------------------------------------+------+-----+---------+----------------+
+4 rows in set (0.00 sec)
+
+**********************************************************************************************************************
+
+// VERIFY THE CREATION OF ALL THE TABLES
+
+mysql> show tables;
++-------------------+
+| Tables_in_ASSIGN6 |
++-------------------+
+| ADDRESS           |
+| COUNTRY           |
+| ORDERS            |
+| PAYMENT           |
+| PRODUCT           |
+| ROLE              |
+| USER              |
++-------------------+
+7 rows in set (0.00 sec)
+
+************************************************************************************************
+
+// LINK ALL THE TABLES USING FOREIGN KEYS
+
+mysql> alter table ADDRESS
+    -> add foreign key (user_id)
+    -> references USER(user_id);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> describe ADDRESS;
++---------+--------------+------+-----+---------+----------------+
+| Field   | Type         | Null | Key | Default | Extra          |
++---------+--------------+------+-----+---------+----------------+
+| add_id  | int          | NO   | PRI | NULL    | auto_increment |
+| user_id | int          | NO   | MUL | NULL    |                |
+| address | varchar(200) | NO   |     | NULL    |                |
++---------+--------------+------+-----+---------+----------------+
+3 rows in set (0.00 sec)
+
+
+
+
+mysql> alter table USER
+    -> add role_id int not null
+    -> after last_name;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table USER
+    -> add foreign key (role_id) references ROLE(role_id);
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> describe USER;
++------------+-------------+------+-----+---------+----------------+
+| Field      | Type        | Null | Key | Default | Extra          |
++------------+-------------+------+-----+---------+----------------+
+| user_id    | int         | NO   | PRI | NULL    | auto_increment |
+| email      | varchar(50) | NO   |     | NULL    |                |
+| first_name | varchar(50) | NO   |     | NULL    |                |
+| last_name  | varchar(50) | NO   |     | NULL    |                |
+| role_id    | int         | NO   | MUL | NULL    |                |
+| phone_no   | char(10)    | NO   |     | NULL    |                |
++------------+-------------+------+-----+---------+----------------+
+6 rows in set (0.00 sec)
+
+
+
+
+mysql> alter table PRODUCT
+    -> add foreign key (prod_count_id)
+    -> references COUNTRY (count_id);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> describe PRODUCT;
++---------------+--------------+------+-----+---------+----------------+
+| Field         | Type         | Null | Key | Default | Extra          |
++---------------+--------------+------+-----+---------+----------------+
+| prod_id       | int          | NO   | PRI | NULL    | auto_increment |
+| prod_name     | varchar(50)  | NO   |     | NULL    |                |
+| prod_count_id | int          | NO   | MUL | NULL    |                |
+| prod_cost     | int unsigned | NO   |     | NULL    |                |
++---------------+--------------+------+-----+---------+----------------+
+4 rows in set (0.00 sec)
+
+
+
+
+mysql> alter table ORDERS
+    -> add foreign key (user_id) references USER(user_id),
+    -> add foreign key (prod_id) references PRODUCT(prod_id);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> describe ORDERS;
++----------+------+------+-----+---------+----------------+
+| Field    | Type | Null | Key | Default | Extra          |
++----------+------+------+-----+---------+----------------+
+| order_id | int  | NO   | PRI | NULL    | auto_increment |
+| user_id  | int  | NO   | MUL | NULL    |                |
+| prod_id  | int  | NO   | MUL | NULL    |                |
++----------+------+------+-----+---------+----------------+
+3 rows in set (0.00 sec)
+
+
+
+
+mysql> alter table PAYMENT
+    -> add foreign key (user_id)
+    -> references USER(user_id);
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> describe PAYMENT;
++----------+-------------------------------------+------+-----+---------+----------------+
+| Field    | Type                                | Null | Key | Default | Extra          |
++----------+-------------------------------------+------+-----+---------+----------------+
+| pay_id   | int                                 | NO   | PRI | NULL    | auto_increment |
+| user_id  | int                                 | NO   | MUL | NULL    |                |
+| pay_day  | date                                | NO   |     | NULL    |                |
+| pay_mode | enum('pre-paid','cash-on-delivery') | NO   |     | NULL    |                |
++----------+-------------------------------------+------+-----+---------+----------------+
+4 rows in set (0.01 sec)
+
+*****************************************************************************
+
+// INPUT DATA INTO THE TABLE
+
+mysql> insert into ROLE (role_name) values
+    -> ('customer'),
+    -> ('owner'),
+    -> ('store manager'),
+    -> ('cleaning staff'),
+    -> ('delivery staff');
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select * from ROLE;
++---------+----------------+
+| role_id | role_name      |
++---------+----------------+
+|       1 | customer       |
+|       2 | owner          |
+|       3 | store manager  |
+|       4 | cleaning staff |
+|       5 | delivery staff |
++---------+----------------+
+5 rows in set (0.00 sec)
+
+
+
+
+mysql> insert into COUNTRY (country, supplier) values
+    -> ('country0', 'supplier0'),
+    -> ('country1', 'supplier1'),
+    -> ('country2', 'supplier2'),
+    -> ('country3', 'supplier3'),
+    -> ('country4', 'supplier4'),
+    -> ('country5', 'supplier5'),
+    -> ('country6', 'supplier6'),
+    -> ('country7', 'supplier7'),
+    -> ('country8', 'supplier8'),
+    -> ('country9', 'supplier9');
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> select * from COUNTRY;
++----------+----------+-----------+
+| count_id | country  | supplier  |
++----------+----------+-----------+
+|        1 | country0 | supplier0 |
+|        2 | country1 | supplier1 |
+|        3 | country2 | supplier2 |
+|        4 | country3 | supplier3 |
+|        5 | country4 | supplier4 |
+|        6 | country5 | supplier5 |
+|        7 | country6 | supplier6 |
+|        8 | country7 | supplier7 |
+|        9 | country8 | supplier8 |
+|       10 | country9 | supplier9 |
++----------+----------+-----------+
+10 rows in set (0.00 sec)
+
+
+
+
+mysql> insert into USER
+    -> (email, first_name, last_name, role_id, phone_no) values
+    -> ('email0@gmail.com', 'first0', 'last0', 1, '0000000000'),
+    -> ('email1@gmail.com', 'first1', 'last1', 2, '1111111111'),
+    -> ('email2@gmail.com', 'first2', 'last2', 3, '2222222222'),
+    -> ('email3@gmail.com', 'first3', 'last3', 4, '3333333333'),
+    -> ('email4@gmail.com', 'first4', 'last4', 5, '4444444444'),
+    -> ('email5@gmail.com', 'first5', 'last5', 1, '5555555555'),
+    -> ('email6@gmail.com', 'first6', 'last6', 2, '6666666666'),
+    -> ('email7@gmail.com', 'first7', 'last7', 3, '7777777777'),
+    -> ('email8@gmail.com', 'first8', 'last8', 4, '8888888888'),
+    -> ('email9@gmail.com', 'first9', 'last9', 5, '9999999999');
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> select * from USER;
++---------+------------------+------------+-----------+---------+------------+
+| user_id | email            | first_name | last_name | role_id | phone_no   |
++---------+------------------+------------+-----------+---------+------------+
+|      12 | email0@gmail.com | first0     | last0     |       1 | 0000000000 |
+|      13 | email1@gmail.com | first1     | last1     |       2 | 1111111111 |
+|      14 | email2@gmail.com | first2     | last2     |       3 | 2222222222 |
+|      15 | email3@gmail.com | first3     | last3     |       4 | 3333333333 |
+|      16 | email4@gmail.com | first4     | last4     |       5 | 4444444444 |
+|      17 | email5@gmail.com | first5     | last5     |       1 | 5555555555 |
+|      18 | email6@gmail.com | first6     | last6     |       2 | 6666666666 |
+|      19 | email7@gmail.com | first7     | last7     |       3 | 7777777777 |
+|      20 | email8@gmail.com | first8     | last8     |       4 | 8888888888 |
+|      21 | email9@gmail.com | first9     | last9     |       5 | 9999999999 |
++---------+------------------+------------+-----------+---------+------------+
+10 rows in set (0.00 sec)
+
+
+
+
+mysql> insert into ADDRESS
+    -> (user_id, address) values
+    -> ('12', 'address0'),
+    -> ('13', 'address1'),
+    -> ('14', 'address2'),
+    -> ('14', 'address3'),
+    -> ('15', 'address4'),
+    -> ('16', 'address5'),
+    -> ('16', 'address6'),
+    -> ('17', 'address7'),
+    -> ('18', 'address10'),
+    -> ('19', 'address11'),
+    -> ('20', 'address12'),
+    -> ('20', 'address13'),
+    -> ('21', 'address14'),
+    -> ('21', 'address15');
+Query OK, 14 rows affected (0.01 sec)
+Records: 14  Duplicates: 0  Warnings: 0
+
+mysql> select * from ADDRESS;
++--------+---------+-----------+
+| add_id | user_id | address   |
++--------+---------+-----------+
+|      1 |      12 | address0  |
+|      2 |      13 | address1  |
+|      3 |      14 | address2  |
+|      4 |      14 | address3  |
+|      5 |      15 | address4  |
+|      6 |      16 | address5  |
+|      7 |      16 | address6  |
+|      8 |      17 | address7  |
+|      9 |      18 | address10 |
+|     10 |      19 | address11 |
+|     11 |      20 | address12 |
+|     12 |      20 | address13 |
+|     13 |      21 | address14 |
+|     14 |      21 | address15 |
++--------+---------+-----------+
+14 rows in set (0.00 sec)
+
+
+
+
+mysql> insert into PRODUCT (prod_name, prod_count_id, prod_cost) values
+    -> ('product0', 1, 100),
+    -> ('product1', 1, 200),
+    -> ('product2', 2, 300),
+    -> ('product3', 3, 400),
+    -> ('product4', 3, 500),
+    -> ('product5', 6, 600),
+    -> ('product6', 7, 700),
+    -> ('product7', 9, 800),
+    -> ('product8', 9, 900),
+    -> ('product9', 9, 1000);
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> select * from PRODUCT;
++---------+-----------+---------------+-----------+
+| prod_id | prod_name | prod_count_id | prod_cost |
++---------+-----------+---------------+-----------+
+|       1 | product0  |             1 |       100 |
+|       2 | product1  |             1 |       200 |
+|       3 | product2  |             2 |       300 |
+|       4 | product3  |             3 |       400 |
+|       5 | product4  |             3 |       500 |
+|       6 | product5  |             6 |       600 |
+|       7 | product6  |             7 |       700 |
+|       8 | product7  |             9 |       800 |
+|       9 | product8  |             9 |       900 |
+|      10 | product9  |             9 |      1000 |
++---------+-----------+---------------+-----------+
+10 rows in set (0.00 sec)
+
+
+
+
+mysql> insert into ORDERS
+    -> (user_id, prod_id) values
+    -> (12, 1),
+    -> (12, 2),
+    -> (12, 3),
+    -> (14, 7),
+    -> (14, 8),
+    -> (15, 9),
+    -> (16, 1),
+    -> (17, 6),
+    -> (17, 7),
+    -> (17, 8),
+    -> (17, 9);
+Query OK, 11 rows affected (0.01 sec)
+Records: 11  Duplicates: 0  Warnings: 0
+
+mysql> select * from ORDERS;
++----------+---------+---------+
+| order_id | user_id | prod_id |
++----------+---------+---------+
+|        1 |      12 |       1 |
+|        2 |      12 |       2 |
+|        3 |      12 |       3 |
+|        4 |      14 |       7 |
+|        5 |      14 |       8 |
+|        6 |      15 |       9 |
+|        7 |      16 |       1 |
+|        8 |      17 |       6 |
+|        9 |      17 |       7 |
+|       10 |      17 |       8 |
+|       11 |      17 |       9 |
++----------+---------+---------+
+11 rows in set (0.00 sec)
+
+
+
+
+mysql> insert into PAYMENT
+    -> (user_id, pay_day, pay_mode) values
+    -> (12, '2022-08-22', 'pre-paid'),
+    -> (14, '2022-08-23', 'pre-paid'),
+    -> (15, '2022-08-23', 'cash-on-delivery'),
+    -> (16, '2022-08-24', 'pre-paid'),
+    -> (17, '2022-08-29', 'cash-on-delivery');
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select * from PAYMENT;
++--------+---------+------------+------------------+
+| pay_id | user_id | pay_day    | pay_mode         |
++--------+---------+------------+------------------+
+|      1 |      12 | 2022-08-22 | pre-paid         |
+|      2 |      14 | 2022-08-23 | pre-paid         |
+|      3 |      15 | 2022-08-23 | cash-on-delivery |
+|      4 |      16 | 2022-08-24 | pre-paid         |
+|      5 |      17 | 2022-08-29 | cash-on-delivery |
++--------+---------+------------+------------------+
+5 rows in set (0.00 sec)
+
+
